@@ -1,0 +1,124 @@
+{
+  "name": "@frsty/typesafe-query-keys",
+  "version": "0.1.0",
+  "description": "Type-safe query keys for TanStack Query",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Sandesh Pandey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frstycodes/typesafe-query-keys/issues"
+  },
+  "homepage": "https://github.com/frstycodes/typesafe-query-keys#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frsty/typesafe-query-keys.git"
+  },
+  "keywords": [
+    "typescript",
+    "tanstack-query",
+    "query-keys",
+    "type-safe",
+    "vite-plugin",
+    "codegen"
+  ],
+  "bin": {
+    "typesafe-query-keys-cli": "./dist/cli/index.cjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./vite-plugin": {
+      "import": "./dist/vite-plugin/index.js",
+      "require": "./dist/vite-plugin/index.cjs"
+    },
+    "./cli": {
+      "import": "./dist/cli/index.js",
+      "require": "./dist/cli/index.cjs"
+    },
+    "./config": {
+      "import": "./dist/config/index.js",
+      "require": "./dist/config/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "vite-plugin"
+  ],
+  "scripts": {
+    "build": "pnpm clean && tsup src/index.ts src/vite-plugin/index.ts src/cli/index.ts src/config/index.ts --format cjs,esm --dts --treeshake",
+    "dev": "tsup src/index.ts src/vite-plugin/index.ts src/cli/index.ts src/config/index.ts --format cjs,esm --dts --treeshake --watch",
+    "lint": "eslint src --ext .ts",
+    "clean": "rimraf dist",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest watch",
+    "ci:version": "pnpm version",
+    "ci:publish": "pnpm publish --no-git-checks",
+    "prepublishOnly": "pnpm run build",
+    "changeset": "cliff-jumper",
+    "version": "cliff-jumper version",
+    "release": "cliff-jumper release",
+    "bump": "pnpm changeset && pnpm version && git push --follow-tags",
+    "prepare": "husky",
+    "commit": "cz"
+  },
+  "peerDependencies": {
+    "typescript": ">=4",
+    "vite": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "commander": "^14.0.0",
+    "cosmiconfig": "^9.0.0",
+    "glob": "^11.0.3",
+    "ignore": "^7.0.5",
+    "micromatch": "^4.0.8",
+    "neverthrow": "^8.2.0",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@favware/cliff-jumper": "6.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/micromatch": "^4.0.9",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
+    "commitizen": "4.3.1",
+    "cz-conventional-changelog": "3.3.0",
+    "husky": "9.1.7",
+    "prettier": "3.6.2",
+    "rimraf": "^6.0.1",
+    "tsup": "8.5.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.2",
+    "vitest": "^3.2.4"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

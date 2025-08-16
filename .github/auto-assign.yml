@@ -1,0 +1,37 @@
+# Set to true to add reviewers to pull requests
+addReviewers: true
+
+# Set to true to add assignees to pull requests
+addAssignees: true
+
+# A list of reviewers to be added to pull requests (GitHub user name)
+reviewers:
+  - yourusername
+  # Add more reviewers here
+
+# A number of reviewers added to the pull request
+# Set 0 to add all the reviewers
+numberOfReviewers: 1
+
+# A list of assignees, overrides reviewers if set
+# assignees:
+#   - yourusername
+
+# A number of assignees to add to the pull request
+# Set to 0 to add all of the assignees
+# Uses numberOfReviewers if unset
+# numberOfAssignees: 1
+
+# A list of keywords to be skipped if pull request title contains it
+# skipKeywords:
+#   - wip
+
+# Skip adding reviewers if the PR is labeled with these labels
+skipReviewersByLabels:
+  - dependencies
+  - automerge
+
+# Skip adding assignees if the PR is labeled with these labels
+skipAssigneesByLabels:
+  - dependencies
+  - automerge

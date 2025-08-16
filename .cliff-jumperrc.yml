@@ -1,0 +1,3 @@
+name: "@frsty/typesafe-query-keys"
+packagePath: "."
+commitMessageTemplate: "chore(release): release {{new-version}}"

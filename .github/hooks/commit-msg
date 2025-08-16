@@ -1,0 +1,3 @@
+#!/bin/sh
+
+pnpm dlx commitlit --edit $1

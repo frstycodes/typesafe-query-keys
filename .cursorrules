@@ -1,0 +1,69 @@
+AI COMMIT MESSAGE GUIDE:
+
+Format: <type>(<scope>): <subject>
+
+Examples:
+- feat(api): add endpoint for user authentication
+- fix(ui): resolve button alignment issue in mobile view
+- docs(readme): update installation instructions
+
+Types:
+- feat: New features that add functionality
+- fix: Bug fixes
+- docs: Documentation changes
+- style: Code style changes (formatting, missing semicolons, etc.)
+- refactor: Code changes that neither fix bugs nor add features
+- perf: Performance improvements
+- test: Adding or fixing tests
+- build: Changes to build system or dependencies
+- ci: Changes to CI configuration
+- chore: Other changes that don't modify src or test files
+- revert: Reverts a previous commit
+
+Scope:
+- Optional part specifying what part of the codebase is affected
+- Examples: api, ui, auth, core, config, etc.
+
+Subject:
+- Imperative, present tense: "change" not "changed" or "changes"
+- No period at the end
+- Start with lowercase
+- Describe what the commit does, not what it did
+
+Body (optional):
+- Separated from subject by blank line
+- Explain what and why vs. how
+- Can include multiple paragraphs
+
+Footer (optional):
+- Reference issues the commit closes
+- Breaking changes should start with "BREAKING CHANGE:"
+
+Examples of good commit messages:
+
+feat(query-keys): add support for nested paths
+
+Implement support for nested paths in query keys to allow more
+complex hierarchies. This enables users to define deeper structures
+for their data fetching patterns.
+
+Closes #123
+
+---
+
+fix(codegen): resolve type generation for dynamic paths
+
+---
+
+docs: update API documentation with new examples
+
+---
+
+BREAKING CHANGE: refactor(api): change query key format
+
+The query key format has been changed to improve type safety.
+Users will need to update their existing query key definitions.
+
+Migration guide:
+- Old format: qk('users')
+- New format: qk('users', {})
