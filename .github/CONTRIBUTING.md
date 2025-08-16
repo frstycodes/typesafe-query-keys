@@ -13,8 +13,8 @@ Thank you for your interest in contributing to this project! This document provi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/better-query-keys.git
-   cd better-query-keys
+   git clone https://github.com/yourusername/typesafe-query-keys.git
+   cd typesafe-query-keys
    ```
 
 2. Install dependencies:

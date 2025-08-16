@@ -18,6 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          repository: frstycodes/typesafe-query-keys
           fetch-depth: 0
 
       - name: Setup pnpm
