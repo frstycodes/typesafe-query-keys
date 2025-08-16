@@ -15,17 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: "pnpm"
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
           run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12
+          cache: 'pnpm'
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -34,7 +34,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -68,17 +68,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-          cache: "pnpm"
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
           run_install: false
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -87,7 +87,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
