@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+# [0.1.0](https://github.com/frstycodes/typesafe-query-keys/tree/v0.1.0) - (2025-08-16)
+
+## 🚀 Features
+
+- ***:** Project Init ([b892cc5](https://github.com/frstycodes/typesafe-query-keys/commit/b892cc5b4c9054e2b9f88bba5a6a9a1b3240030b))
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 # [0.3.0](https://github.com/frstycodes/typesafe-query-keys/tree/v0.3.0) - (2025-08-16)
 
 ## 🚀 Features
