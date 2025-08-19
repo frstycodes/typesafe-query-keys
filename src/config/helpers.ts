@@ -1,4 +1,4 @@
-import { cosmiconfig } from 'cosmiconfig'
+import { cosmiconfig, CosmiconfigResult } from 'cosmiconfig'
 import { Result, err, ok } from 'neverthrow'
 import { Config, ConfigInsert, ConfigSchema } from './config.schema'
 import path from 'path'
@@ -65,11 +65,31 @@ export async function parseConfig(
   return ok(validated)
 }
 
-export async function loadConfig(): Promise<Result<Config, Error>> {
+export async function loadConfig(
+  configFromCli: Config,
+  configPath: string | null,
+): Promise<Result<Config, Error>> {
   try {
     const explorer = cosmiconfig(CFG_FILE_KEY)
-    const result = await explorer.search()
-    return parseConfig(result?.config ?? {})
+    let result: CosmiconfigResult
+
+    if (configPath) {
+      // Load config from specified path
+      result = await explorer.load(configPath)
+    } else {
+      // Search for config if no path provided
+      result = await explorer.search()
+    }
+
+    const filteredCliConfig = Object.fromEntries(
+      Object.entries(configFromCli).filter(([k]) => k !== undefined),
+    )
+
+    console.log(filteredCliConfig)
+
+    const merged = { ...(result?.config ?? {}), ...filteredCliConfig }
+
+    return parseConfig(merged)
   } catch (error) {
     return err(error instanceof Error ? error : new Error(String(error)))
   }

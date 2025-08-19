@@ -3,13 +3,24 @@
 import chokidar from 'chokidar'
 import { Command } from 'commander'
 import fs from 'fs'
+import { glob } from 'glob'
 import path from 'path'
+import Lib from '../../package.json'
 import { collectPatterns, generateTypeDefinitions } from '../codegen'
 import { loadConfig } from '../config/helpers'
 import { hashFile } from '../utils/crypto'
 import { createLogger } from '../utils/logger'
-import { glob } from 'glob'
-import Lib from '../../package.json'
+
+export type CLIOptions = {
+  include: string[]
+  exclude: string[]
+  output: string
+  ignoreFile: string | null
+  verbose: boolean
+  config: string | null
+  watch: boolean
+  once: boolean
+}
 
 const program = new Command()
 
@@ -17,17 +28,33 @@ program
   .name('typesafe-query-keys')
   .description('Generate TypeScript types for query keys')
   .version(Lib.version)
-  .option('-w, --watch', 'Watch for file changes', false)
-  .option('--once', 'Generate types once and exit', false)
+  .option('-i, --include <glob pattern, string[]>', 'Paths to include')
+  .option('-e, --exclude <glob pattern, string[]>', 'Paths to exclude')
+  .option('-o, --output <path>', 'Path to the generated output file')
+  .option('-f, --ignoreFile <path>', 'Path to an ignore file like .gitignore')
+  .option('-v, --verbose', 'Enable verbose logging')
+  //
+  .option('-c, --config <path>', 'Path to the configuration file')
+  .option('-w, --watch', 'Watch for file changes')
+  .option('--once', 'Generate types once and exit')
   .parse(process.argv)
 
-const options = program.opts()
+const options: CLIOptions = program.opts()
+
+const configFromCli = {
+  include: options.include,
+  exclude: options.exclude,
+  outputFile: options.output,
+  ignoreFile: options.ignoreFile,
+  verbose: options.verbose,
+}
+
 // Store the hash of the last file we generated to avoid infinite loops
 let lastGeneratedFileHash: string | null = null
 
 async function main() {
   // Load configuration
-  const configResult = await loadConfig()
+  const configResult = await loadConfig(configFromCli, options.config)
 
   if (configResult.isErr()) {
     console.error('❌ Error loading configuration:', configResult.error)
