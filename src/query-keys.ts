@@ -1,35 +1,35 @@
-type QueryKey = readonly unknown[];
-
+type QueryKey = unknown[]
 // Additive registration interface (declaration-merge target)
 // The generated file augments this interface by adding keys for each path.
 // Keep it empty to allow safe declaration merging.
 export interface RegisteredPaths {
   // Placeholder to satisfy linting; excluded from public union type
-  __placeholder__?: never;
+  __placeholder__?: never
 }
 
 // Union of all registered path keys (excluding the placeholder)
 export type QueryKeyPaths = Exclude<
   Extract<keyof RegisteredPaths, string>,
-  "__placeholder__"
->;
+  '__placeholder__'
+>
 
+type ParamValue = string | number | boolean
 // Type helpers for extracting parameters from paths
 export type ExtractParamsFromID<T extends string> =
   T extends `${string}$${infer Param}/${infer Rest}`
-    ? { [K in Param]: string | number } & ExtractParamsFromID<Rest>
+    ? { [K in Param]: ParamValue } & ExtractParamsFromID<Rest>
     : T extends `${string}$${infer Param}`
-      ? { [K in Param]: string | number | boolean }
-      : Record<never, never>;
+      ? { [K in Param]: ParamValue }
+      : Record<never, never>
 
 export type HasParams<TPath extends string> =
-  keyof ExtractParamsFromID<TPath> extends never ? false : true;
+  keyof ExtractParamsFromID<TPath> extends never ? false : true
 
-type CommonOptions = { search?: Record<string, unknown> };
+type CommonOptions = { search?: Record<string, unknown> }
 type OptionsFor<TPath extends string> =
   HasParams<TPath> extends true
     ? { params: ExtractParamsFromID<TPath> } & CommonOptions
-    : CommonOptions;
+    : CommonOptions
 
 /**
  * Converts a path pattern and params into a TanStack Query query key array
@@ -37,32 +37,30 @@ type OptionsFor<TPath extends string> =
 function pathToQueryKey(
   path: string,
   options: {
-    params?: Record<string, unknown>;
-    search?: Record<string, unknown>;
+    params?: Record<string, unknown>
+    search?: Record<string, unknown>
   } = {},
 ): QueryKey {
-  const { params = {}, search = {} } = options;
+  const { params = {}, search = {} } = options
 
-  const segments = path.split("/");
-  const result = [];
+  const segments = path.split('/')
+  const result = []
 
   function processSegment(seg: string) {
-    if (!seg.startsWith("$")) return void result.push(seg);
+    if (!seg.startsWith('$')) return void result.push(seg)
 
     // strip leading $
-    const paramKey = seg.slice(1);
+    const paramKey = seg.slice(1)
 
-    if (paramKey in params && params[paramKey])
-      return void result.push(params[paramKey]);
-
-    console.warn(`Missing optional parameter: ${paramKey}`);
+    if (paramKey in params) return void result.push(String(params[paramKey]))
+    console.warn(`Missing optional parameter: ${paramKey}`)
   }
 
-  segments.forEach(processSegment);
+  segments.forEach(processSegment)
 
-  if (Object.keys(search).length > 0) result.push(search);
+  if (Object.keys(search).length > 0) result.push(search)
 
-  return result as QueryKey;
+  return result as QueryKey
 }
 
 /**
@@ -77,10 +75,10 @@ export function qk<TPath extends string>(
     ? [options: { params: ExtractParamsFromID<TPath> } & CommonOptions]
     : [options?: CommonOptions]
 ): QueryKey {
-  const options = (args[0] ?? undefined) as OptionsFor<TPath> | undefined;
-  return pathToQueryKey(path as string, options);
+  const options = (args[0] ?? undefined) as OptionsFor<TPath> | undefined
+  return pathToQueryKey(path as string, options)
 }
-qk.use = useQK;
+qk.use = useQK
 
 /**
  * - Functionally equivalent to `qk` but enforces the use of registered paths
@@ -97,6 +95,6 @@ function useQK<
     ? [options: { params: ExtractParamsFromID<TPath> } & CommonOptions]
     : [options?: CommonOptions]
 ): QueryKey {
-  const options = (args[0] as OptionsFor<TPath>) ?? undefined;
-  return pathToQueryKey(path as string, options);
+  const options = (args[0] as OptionsFor<TPath>) ?? undefined
+  return pathToQueryKey(path as string, options)
 }
