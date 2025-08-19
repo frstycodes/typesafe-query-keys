@@ -116,6 +116,7 @@ export function generateTypeDefinitions(
     if (allPaths.size) {
       const entries = Array.from(allPaths)
         .map((p) => `\t\t'${p}': true;`)
+        .sort((a, b) => a.localeCompare(b))
         .join('\n')
       content = WITH_ENTRIES.replace('{ENTRIES}', entries)
     }
