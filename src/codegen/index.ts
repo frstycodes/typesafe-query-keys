@@ -5,6 +5,7 @@ import path from 'path'
 import ts from 'typescript'
 import { hashFile } from '../utils/crypto'
 import { EMPTY, WITH_ENTRIES } from './codegen.content'
+import { performance } from 'perf_hooks'
 
 export type QueryKeyPattern = {
   path: string
@@ -99,6 +100,7 @@ export function generateTypeDefinitions(
   outPath: string,
 ): Result<string | null, Error> {
   try {
+    const start = performance.now()
     // Collect all unique paths (including parent paths)
     const allPaths = new Set<string>()
 
@@ -147,6 +149,12 @@ export function generateTypeDefinitions(
         ),
       )
     }
+
+    const end = performance.now()
+
+    console.log(
+      `Generated query key definitions in ${(end - start).toFixed(0)}ms`,
+    )
 
     // Calculate and return the hash of the generated file
     return ok(hashFile(content))

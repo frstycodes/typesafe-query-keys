@@ -45,8 +45,6 @@ export function typesafeQueryKeysPlugin(
 
       // Store the hash returned from the generation function
       lastGeneratedFileHash = genResult.value
-
-      logger('info', '✅ Types generated successfully')
     },
 
     async configureServer(server) {
@@ -118,8 +116,6 @@ export function typesafeQueryKeysPlugin(
               `❌ Failed to generate definitions for ${changedPath}: ${genResult.error.message}`,
             )
           } else {
-            logger('info', '✅ Types regenerated successfully')
-
             // Store the hash returned from the generation function
             lastGeneratedFileHash = genResult.value
           }

@@ -63,14 +63,10 @@ async function main() {
     // Store the hash returned from the generation function
     lastGeneratedFileHash = genResult.value
 
-    logger('info', '✅ Types generated successfully')
     return
   }
 
   if (options.watch) {
-    // Watch mode
-    logger('info', '\n👀 Starting file watcher...')
-
     // Initial generation
     logger('info', '🔍 Initial scan for query key patterns...')
     const initialPatternsResult = await collectPatterns(
@@ -100,16 +96,10 @@ async function main() {
         initialGenResult.error,
       )
       process.exit(1)
-      return
     }
 
     // Store the hash returned from the generation function
     lastGeneratedFileHash = initialGenResult.value
-
-    logger('info', '✅ Initial types generated successfully')
-
-    // Set up file watcher
-    logger('info', process.cwd(), config.include)
 
     const watchFiles = await glob(config.include, { ignore: config.exclude })
     const watcher = chokidar.watch(watchFiles, {
@@ -178,8 +168,6 @@ async function main() {
             genResult.error,
           )
         } else {
-          logger('info', '✅ Types regenerated successfully')
-
           // Store the hash returned from the generation function
           lastGeneratedFileHash = genResult.value
         }
@@ -224,8 +212,6 @@ async function main() {
       process.exit(1)
       return
     }
-
-    logger('info', '✅ Types generated successfully')
   }
 }
 
