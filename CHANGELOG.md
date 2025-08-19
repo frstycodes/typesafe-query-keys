@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+# [0.1.6](https://github.com/frstycodes/typesafe-query-keys/compare/v0.1.5...v0.1.6) - (2025-08-19)
+
+## 🏠 Refactor
+
+- **packages:** Remove unused packages and add globifyGitIgnore ([564df42](https://github.com/frstycodes/typesafe-query-keys/commit/564df429f77614262b17dc8ebb154c8cf85a579b))
+- **tests:** Remove redundant unit tests, add practical usage cases ([3a766a0](https://github.com/frstycodes/typesafe-query-keys/commit/3a766a0f704b14ba3e7734889d0a97eece51a856))
+
+## 🐛 Bug Fixes
+
+- **config:** Normalize include/exclude patterns with globifyGitIgnore ([e910da8](https://github.com/frstycodes/typesafe-query-keys/commit/e910da866f3d77a7cc7b3b8c90d30e6e9e692fb2))
+
+## 📝 Documentation
+
+- **config:** Update config.include js docs ([fd061c1](https://github.com/frstycodes/typesafe-query-keys/commit/fd061c14f02be1df9638f96a563a7bc18505abd2))
+
+## 🧪 Testing
+
+- **example:** Add an example react project to test out the library ([2bd0988](https://github.com/frstycodes/typesafe-query-keys/commit/2bd0988c5e8428b210d6918aacebf800d08cb2d3))
+
+## 🪞 Styling
+
+- Formatting changes ([25f982a](https://github.com/frstycodes/typesafe-query-keys/commit/25f982a1d084127f899a2675b8858ba2256c85f5))
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 # [0.1.5](https://github.com/frstycodes/typesafe-query-keys/compare/v0.1.4...v0.1.5) - (2025-08-16)
 
 # Changelog

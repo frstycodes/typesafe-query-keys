@@ -1,6 +1,6 @@
 {
   "name": "@frsty/typesafe-query-keys",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Type-safe query keys for TanStack Query",
   "type": "module",
   "main": "dist/index.cjs",
