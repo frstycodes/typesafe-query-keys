@@ -1,4 +1,3 @@
-type QueryKey = unknown[]
 // Additive registration interface (declaration-merge target)
 // The generated file augments this interface by adding keys for each path.
 // Keep it empty to allow safe declaration merging.
@@ -34,17 +33,23 @@ type OptionsFor<TPath extends string> =
 /**
  * Converts a path pattern and params into a TanStack Query query key array
  */
-function pathToQueryKey(
-  path: string,
-  options: {
-    params?: Record<string, unknown>
-    search?: Record<string, unknown>
-  } = {},
-): QueryKey {
+
+type Options = {
+  params?: Record<string, unknown>
+  search?: Record<string, unknown>
+}
+
+// Modify return type based on presence of search
+function pathToQueryKey<
+  TOpts extends Options,
+  TResult = TOpts extends { search: Record<string, unknown> }
+    ? unknown[]
+    : string[],
+>(path: string, options: TOpts = {} as TOpts): TResult {
   const { params = {}, search = {} } = options
 
   const segments = path.split('/')
-  const result = []
+  const result: any[] = []
 
   function processSegment(seg: string) {
     if (!seg.startsWith('$')) return void result.push(seg)
@@ -60,22 +65,24 @@ function pathToQueryKey(
 
   if (Object.keys(search).length > 0) result.push(search)
 
-  return result as QueryKey
+  return result as TResult
 }
 
 /**
  * - Creates and registers a query key pattern
  * - Shows existing registered paths as suggestions but allows new paths too
  */
-export function qk<TPath extends string>(
+export function qk<TPath extends string, TOpts extends object>(
   // The path can be any string, but we'll suggest existing paths
   path: TPath | QueryKeyPaths,
   // If the path template has params, options is required; otherwise optional
   ...args: HasParams<TPath> extends true
-    ? [options: { params: ExtractParamsFromID<TPath> } & CommonOptions]
-    : [options?: CommonOptions]
-): QueryKey {
-  const options = (args[0] ?? undefined) as OptionsFor<TPath> | undefined
+    ? [options: { params: ExtractParamsFromID<TPath> } & CommonOptions & TOpts]
+    : [options?: CommonOptions & TOpts]
+) {
+  const options = (args[0] ?? undefined) as
+    | (OptionsFor<TPath> & TOpts)
+    | undefined
   return pathToQueryKey(path as string, options)
 }
 qk.use = useQK
@@ -88,13 +95,14 @@ qk.use = useQK
 function useQK<
   // The path must be a registered path
   TPath extends QueryKeyPaths,
+  TOpts extends object,
 >(
   path: TPath,
   // If the path template has params, options is required; otherwise optional
   ...args: HasParams<TPath> extends true
-    ? [options: { params: ExtractParamsFromID<TPath> } & CommonOptions]
-    : [options?: CommonOptions]
-): QueryKey {
-  const options = (args[0] as OptionsFor<TPath>) ?? undefined
+    ? [options: { params: ExtractParamsFromID<TPath> } & CommonOptions & TOpts]
+    : [options?: CommonOptions & TOpts]
+) {
+  const options = (args[0] as OptionsFor<TPath> & TOpts) ?? undefined
   return pathToQueryKey(path as string, options)
 }
