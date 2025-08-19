@@ -1,19 +1,20 @@
 # Typesafe Query Keys CLI
 
-A command-line tool that generates TypeScript types for your query keys by scanning your codebase for `qk.new()` calls. This tool is framework-agnostic and can be used with any JavaScript/TypeScript project.
+A command-line tool that generates TypeScript types for your query keys by scanning your codebase for `qk()` calls. This tool is framework-agnostic and can be used with any JavaScript/TypeScript project.
 
 ## Installation
 
-### Global Installation
+### Installation
 
 ```bash
-npm install -g @frsty/typesafe-query-keys
-```
-
-### Local Installation
-
-```bash
+# Using npm
 npm install @frsty/typesafe-query-keys
+
+# Using yarn
+yarn add @frsty/typesafe-query-keys
+
+# Using pnpm
+pnpm add @frsty/typesafe-query-keys
 ```
 
 ## Quick Start
@@ -23,10 +24,10 @@ npm install @frsty/typesafe-query-keys
 
    ```bash
    # Generate types once
-   typesafe-query-keys
+   npx @frsty/typesafe-query-keys
 
    # Watch for changes and regenerate automatically
-   typesafe-query-keys --watch
+   npx @frsty/typesafe-query-keys --watch
    ```
 
 ## Configuration
@@ -35,8 +36,10 @@ The CLI tool reads configuration from a config file. You can specify the config 
 
 ### Supported Config Formats
 
-- **JavaScript**: `query-keys.config.js`
-- **JSON**: `query-keys.config.json`
+- **TypeScript**: `queryKeys.config.ts`
+- **JavaScript**: `queryKeys.config.js`
+- **JSON**: `queryKeys.config.json`
+- **RC file**: `.queryKeysrc`
 
 ### Example Configuration
 
@@ -91,12 +94,13 @@ module.exports = {
 
 ## Configuration Options
 
-| Option       | Type       | Required | Description                              |
-| ------------ | ---------- | -------- | ---------------------------------------- |
-| `include`    | `string[]` | ✅       | Glob patterns for files to scan          |
-| `outputFile` | `string`   | ✅       | Path to the output file                  |
-| `ignore`     | `string[]` | ❌       | Additional ignore patterns               |
-| `ignoreFile` | `string`   | ❌       | Path to ignore file (e.g., `.gitignore`) |
+| Option       | Type       | Required | Default | Description                              |
+| ------------ | ---------- | -------- | ------- | ---------------------------------------- |
+| `include`    | `string[]` | ✅       | `**/*.{ts,tsx,js,jsx}` | Glob patterns for files to scan |
+| `outputFile` | `string`   | ❌       | `queryKeys.gen.d.ts` | Path to the output file         |
+| `exclude`    | `string[]` | ❌       | `[]`    | Additional exclude patterns              |
+| `ignoreFile` | `string`   | ❌       | `null`  | Path to ignore file (e.g., `.gitignore`) |
+| `verbose`    | `boolean`  | ❌       | `false` | Enable verbose logging                   |
 
 ## CLI Options
 
@@ -104,13 +108,18 @@ module.exports = {
 typesafe-query-keys [options]
 ```
 
-| Option                | Description                  | Default                |
-| --------------------- | ---------------------------- | ---------------------- |
-| `-c, --config <path>` | Path to config file          | `query-keys.config.js` |
-| `-w, --watch`         | Watch for file changes       | `false`                |
-| `--once`              | Generate types once and exit | `false`                |
-| `-h, --help`          | Show help                    | -                      |
-| `-V, --version`       | Show version                 | -                      |
+| Option                          | Description                        | Default                    |
+| ------------------------------- | ---------------------------------- | -------------------------- |
+| `-i, --include <glob pattern>`  | Paths to include                   | `**/*.{ts,tsx,js,jsx}`     |
+| `-e, --exclude <glob pattern>`  | Paths to exclude                   | -                          |
+| `-o, --output <path>`           | Path to the generated output file  | `queryKeys.gen.d.ts`       |
+| `-f, --ignoreFile <path>`       | Path to an ignore file             | -                          |
+| `-v, --verbose`                 | Enable verbose logging             | `false`                    |
+| `-c, --config <path>`           | Path to config file                | Searches common file paths |
+| `-w, --watch`                   | Watch for file changes             | `false`                    |
+| `--once`                        | Generate types once and exit       | `false`                    |
+| `-h, --help`                    | Show help                          | -                          |
+| `-V, --version`                 | Show version                       | -                          |
 
 ## Usage Examples
 
@@ -118,16 +127,22 @@ typesafe-query-keys [options]
 
 ```bash
 # Generate types once using default config
-typesafe-query-keys
+npx @frsty/typesafe-query-keys
 
 # Generate types once using custom config
-typesafe-query-keys --config my-config.js
+npx @frsty/typesafe-query-keys --config my-config.js
 
 # Watch for changes and regenerate automatically
-typesafe-query-keys --watch
+npx @frsty/typesafe-query-keys --watch
 
 # Generate types once and exit (explicit)
-typesafe-query-keys --once
+npx @frsty/typesafe-query-keys --once
+
+# Specify include/exclude patterns and output file
+npx @frsty/typesafe-query-keys --include "src/**/*.{ts,tsx}" --exclude "**/node_modules/**" --output "src/custom.gen.d.ts"
+
+# Enable verbose logging
+npx @frsty/typesafe-query-keys --verbose
 ```
 
 ### Integration with Package Scripts
@@ -149,61 +164,51 @@ Add these scripts to your `package.json`:
 #### Next.js
 
 ```javascript
-// query-keys.config.js
-module.exports = {
+// queryKeys.config.js
+import { defineConfig } from "@frsty/typesafe-query-keys/config";
+
+export default defineConfig({
   include: [
     "app/**/*.{ts,tsx}",
     "components/**/*.{ts,tsx}",
     "lib/**/*.{ts,tsx}",
   ],
-  outputFile: "lib/query-keys.gen.ts",
-  ignore: [
+  outputFile: "lib/queryKeys.gen.d.ts",
+  exclude: [
     "**/node_modules/**",
-    ".next/**",
-    "**/*.test.{ts,tsx}",
-    "**/*.spec.{ts,tsx}",
+    ".next",
+    ".test",
+    "*.spec.{ts,tsx}",
   ],
   ignoreFile: ".gitignore",
-};
+  verbose: true,
+});
 ```
 
 #### React (Create React App)
 
 ```javascript
-// query-keys.config.js
-module.exports = {
+// queryKeys.config.js
+import { defineConfig } from "@frsty/typesafe-query-keys/config";
+
+export default defineConfig({
   include: ["src/**/*.{ts,tsx}"],
-  outputFile: "src/query-keys.gen.ts",
-  ignore: [
+  outputFile: "src/queryKeys.gen.d.ts",
+  exclude: [
     "**/node_modules/**",
     "build/**",
     "**/*.test.{ts,tsx}",
     "**/*.spec.{ts,tsx}",
   ],
   ignoreFile: ".gitignore",
-};
+  verbose: false,
+});
 ```
 
-#### Vite
-
-```javascript
-// query-keys.config.js
-module.exports = {
-  include: ["src/**/*.{ts,tsx}"],
-  outputFile: "src/query-keys.gen.ts",
-  ignore: [
-    "**/node_modules/**",
-    "dist/**",
-    "**/*.test.{ts,tsx}",
-    "**/*.spec.{ts,tsx}",
-  ],
-  ignoreFile: ".gitignore",
-};
-```
 
 ## How It Works
 
-1. **Scans your codebase** for `qk.new()` calls using the specified include patterns
+1. **Scans your codebase** for `qk()` calls using the specified include patterns
 2. **Extracts query key patterns** from the first argument of these calls
 3. **Generates parent paths** automatically (e.g., `"users/$userId/posts"` also registers `"users"` and `"users/$userId"`)
 4. **Watches for file changes** (in watch mode) and regenerates types automatically
@@ -223,17 +228,15 @@ When using the `--watch` flag, the CLI tool:
 
 ```
 🔍 Scanning for query key patterns...
-✅ Types generated successfully
+Generated query key definitions in 1ms
 
-👀 Starting file watcher...
 🔍 Initial scan for query key patterns...
-✅ Initial types generated successfully
+Generated query key definitions in 1ms
 🚀 Watching for file changes...
 Press Ctrl+C to stop
 
-📝 File changed: src/components/UserProfile.tsx
 🔄 Regenerating types for src/components/UserProfile.tsx
-✅ Types regenerated successfully
+Generated query key definitions in 2ms
 ```
 
 ## Troubleshooting
@@ -258,42 +261,6 @@ Press Ctrl+C to stop
 2. **Verify your OS supports** file watching (most do)
 3. **Try running with elevated permissions** if needed
 4. **Check for antivirus software** blocking file watching
-
-## Integration with Build Tools
-
-### Webpack
-
-```javascript
-// webpack.config.js
-const { typesafeQueryKeysPlugin } = require("@frsty/typesafe-query-keys");
-
-module.exports = {
-  // ... other config
-  plugins: [
-    typesafeQueryKeysPlugin({
-      include: ["src/**/*.{ts,tsx}"],
-      outputFile: "src/query-keys.gen.ts",
-    }),
-  ],
-};
-```
-
-### Rollup
-
-```javascript
-// rollup.config.js
-import { typesafeQueryKeysPlugin } from "@frsty/typesafe-query-keys";
-
-export default {
-  // ... other config
-  plugins: [
-    typesafeQueryKeysPlugin({
-      include: ["src/**/*.{ts,tsx}"],
-      outputFile: "src/query-keys.gen.ts",
-    }),
-  ],
-};
-```
 
 ## Contributing
 

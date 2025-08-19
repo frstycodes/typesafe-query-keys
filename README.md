@@ -53,14 +53,17 @@ The CLI tool is the most flexible way to use this package. It works with any fra
 
 ```bash
 # Generate types once
-npx typesafe-query-keys
+npx @frsty/typesafe-query-keys
 # or with pnpm
-pnpm exec typesafe-query-keys
+pnpm dlx @frsty/typesafe-query-keys
 
 # Watch for changes and regenerate automatically
-npx typesafe-query-keys --watch
+npx @frsty/typesafe-query-keys --watch
 # or with pnpm
-pnpm exec typesafe-query-keys --watch
+pnpm dlx @frsty/typesafe-query-keys --watch
+
+# With custom options
+npx @frsty/typesafe-query-keys --include "src/**/*.{ts,tsx}" --exclude "**/node_modules/**" --output "src/queryKeys.gen.d.ts"
 ```
 
 See [CLI Documentation](./README-CLI.md) for detailed usage instructions.
@@ -77,8 +80,8 @@ import { typesafeQueryKeysPlugin } from "@frsty/typesafe-query-keys";
 export default defineConfig({
   plugins: [
     typesafeQueryKeysPlugin({
-      outputFile: "src/query-keys.gen.ts",
-      exclude: ["node_modules"],
+      outputFile: "src/queryKeys.gen.d.ts", // optional
+      exclude: [".next"],
     }),
   ],
 });
@@ -95,8 +98,8 @@ export default defineConfig({
   plugins: [
     typesafeQueryKeysPlugin({
       include: ["src/**/*.query.{ts,tsx}"], // Include only query files
-      outputFile: "src/query-keys.gen.ts",
-      ignore: [
+      outputFile: "src/queryKeys.gen.ts", // optional
+      exclude: [
         "**/node_modules/**",
         "**/dist/**",
         "**/*.test.{ts,tsx}",
@@ -104,6 +107,7 @@ export default defineConfig({
         "**/generated/**",
       ],
       ignoreFile: ".gitignore", // Use existing .gitignore file
+      verbose: true // Enable verbose mode for debugging
     }),
   ],
 });
@@ -114,15 +118,16 @@ export default defineConfig({
 | Option       | Type       | Default                 | Description                              |
 | ------------ | ---------- | ----------------------- | ---------------------------------------- |
 | `include`    | `string[]` | Required                | Glob patterns for files to scan          |
-| `outputFile` | `string`   | `src/query-keys.gen.ts` | Output file for generated types          |
-| `ignore`     | `string[]` | `[]`                    | Additional ignore patterns               |
+| `outputFile` | `string`   | `queryKeys.gen.d.ts`    | Output file for generated types          |
+| `exclude`     | `string[]` | `[]`                    | Additional ignore patterns               |
 | `ignoreFile` | `string`   | `undefined`             | Path to ignore file (e.g., `.gitignore`) |
+| `verbose` | `boolean`   | `false`             | Verbose mode for debugging               |
 
 ## How It Works
 
 The plugin:
 
-1. **Scans your codebase** for `qk.new()` calls during build and development
+1. **Scans your codebase** for `qk()` calls during build and development
 2. **Extracts query key patterns** from the first argument of these calls
 3. **Generates parent paths** automatically (e.g., `"users/$userId/posts"` also registers `"users"` and `"users/$userId"`)
 4. **Watches for file changes** and regenerates types automatically
@@ -163,11 +168,11 @@ The plugin automatically watches for file changes and regenerates types when:
 - Changes match the include patterns
 - Files are not ignored by the ignore patterns
 
-## Ignore Patterns
+## Exclude Patterns
 
 You can specify ignore patterns in multiple ways:
 
-1. **Direct ignore patterns** in the plugin options
+1. **Direct exclude patterns** in the plugin options
 2. **Ignore file** (like `.gitignore`) that the plugin will read
 3. **Combination** of both
 
@@ -177,6 +182,7 @@ The plugin supports basic glob patterns like:
 - `**/*.test.{ts,tsx}`
 - `**/generated/**`
 - `dist/`
+- `.next`
 
 ## Troubleshooting
 
@@ -192,67 +198,44 @@ The plugin supports basic glob patterns like:
 2. Add appropriate ignore patterns for large directories
 3. Consider excluding test files and build artifacts
 
-## Testing
-
-The library includes a comprehensive Jest test suite to ensure reliability and correctness:
-
-- **Unit Tests**: Testing individual components and utilities
-  - Core query key functionality and type extraction
-  - Utility functions for logging and pattern matching
-  - Configuration parsing and validation
-  - Code generation and pattern extraction
-
-- **Integration Tests**: Testing the full workflow from scanning files to generating types
-
-The test suite has 100% passing tests with excellent coverage of all core functionality.
-
-To run the tests:
-
-```bash
-# Run all tests
-npm run test
-
-# Run with coverage report
-npm test -- --coverage
-
-# Run with UI
-npm run test:ui
-```
-
-### Test Results
-
-```
- PASS  test/unit/utils/logger.test.ts
- PASS  test/unit/query-keys.test.ts
- PASS  test/unit/codegen/codegen.test.ts
- PASS  test/unit/config/config.test.ts
- PASS  test/integration/integration.test.ts
-
-Test Suites: 5 passed, 5 total
-Tests:       51 passed, 51 total
-Snapshots:   0 total
-Time:        3.2s
-```
-
 ## CLI Tool
 
 For framework-agnostic usage and more control, use the CLI tool:
 
 ```bash
-# Install globally
-npm install -g @frsty/typesafe-query-keys
+# Generate types once
+npx @frsty/typesafe-query-keys
 
 # Or use without installing
 npx @frsty/typesafe-query-keys
 
 # Watch mode
 npx @frsty/typesafe-query-keys --watch
+
+# With custom configuration
+npx @frsty/typesafe-query-keys --config ./path/to/config.js
+
+# With CLI options
+npx @frsty/typesafe-query-keys --include "src/**/*.{ts,tsx}" --output "src/custom.gen.d.ts" --verbose
 ```
 
 ### CLI Features
 
 - **Framework Agnostic**: Works with any JavaScript/TypeScript project
-- **Config Files**: Support for JavaScript and JSON configuration
+- **Config Files**: Support for JavaScript and JSON configuration ["queryKeys.config.{ts,js}", "queryKeys.config.json", ".queryKeysrc"]
+    - Also exports a `defineConfig` function from "@frsty/typesafe-query-keys/config" as a type-safe way to define configuration options
+    ```ts
+    import { defineConfig } from "@frsty/typesafe-query-keys/config";
+
+    export default defineConfig({
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["**/node_modules/**", "**/*.test.{ts,tsx}"],
+      outputFile: "src/queryKeys.gen.d.ts",
+      ignoreFile: ".gitignore",
+      verbose: true,
+    });
+    ```
+- **CLI Options**: Command-line options for include, exclude, output path, and more
 - **File Watching**: Cross-platform file watching with Chokidar
 - **Ignore Patterns**: Flexible ignore pattern support
 - **Build Integration**: Easy integration with any build process

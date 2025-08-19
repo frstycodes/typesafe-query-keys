@@ -2,7 +2,7 @@ import { z } from 'zod/v4'
 
 const ALWAYS_EXCLUDE = ['vite.config.*', '**/node_modules/**']
 const DEFAULT_INCLUDE = ['**/*.{ts,tsx,js,jsx}']
-const DEFAULT_GEN_FILE = 'queryKeys.gen.d.ts'
+export const DEFAULT_GEN_FILE = 'queryKeys.gen.d.ts'
 
 type NoUndefinedObj<T> = Required<{
   [K in keyof T]: Exclude<T[K], undefined>
