@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       chokidar:
-        specifier: 4.0.3
+        specifier: ^4.0.3
         version: 4.0.3
       commander:
         specifier: ^14.0.0

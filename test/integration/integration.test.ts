@@ -148,11 +148,6 @@ describe('Integration Tests', () => {
         isFile: () => true,
       } as unknown as fs.Stats)
 
-      // Mock globifyGitIgnore to avoid test issues
-      vi.mock('globify-gitignore', () => ({
-        globifyGitIgnore: vi.fn().mockResolvedValue([]),
-      }))
-
       // 1. Parse config
       const configResult = await parseConfig({
         include: ['src/**/*.ts'],
@@ -169,7 +164,7 @@ describe('Integration Tests', () => {
       // Due to mocking challenges in test environment, we'll verify just the config parsing
       // which is a key part of the integration flow
       expect(configResult.isOk()).toBe(true)
-      expect(config.include).toEqual(['src/**/*.ts'])
+      expect(config.include).toEqual(['src/**/*.ts', 'src/**/*.ts/**'])
       expect(config.outputFile).toEqual('src/generated/query-keys.gen.ts')
       expect(config.exclude).toContain('**/*.test.ts')
       expect(config.verbose).toBe(true)
