@@ -11,7 +11,8 @@ type NoUndefinedObj<T> = Required<{
 export type ConfigInsert = {
   /**
    * Glob patterns specifying which files to include for query key extraction.
-   * Example: `["src/api/**\/*.ts"]`
+   * @example ["src/api/**\/*.{ts,tsx}", "routes", "app/queries"]
+   * @note Exact glob patterns are recommended for better performance.
    */
   include?: string[] | undefined
   /**
