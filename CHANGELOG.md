@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.0.4](https://github.com/frstycodes/typesafe-query-keys/compare/v1.0.3...v1.0.4) - (2025-08-19)
+
+## 🐛 Bug Fixes
+
+- Fix CLI config filtering to exclude undefined values ([d63c9a0](https://github.com/frstycodes/typesafe-query-keys/commit/d63c9a0a1e42198276879764fb385bb61e927e26))
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 # [1.0.3](https://github.com/frstycodes/typesafe-query-keys/compare/v1.0.2...v1.0.3) - (2025-08-19)
 
 # Changelog
