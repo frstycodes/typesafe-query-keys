@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.0.0](https://github.com/frstycodes/typesafe-query-keys/compare/v0.1.7...v1.0.0) - (2025-08-19)
+
+## 📝 Documentation
+
+- **cli:** Update READMEs for the new CLI changes and fix some mistakes ([a9a78a2](https://github.com/frstycodes/typesafe-query-keys/commit/a9a78a2aecb1729fe78e50852688713a1e5db9d6))
+
+## 🚀 Features
+
+- **cli:** Allow passing config through cli tool ([6b81259](https://github.com/frstycodes/typesafe-query-keys/commit/6b81259bea6a64e36d073245821722bdc122e97b))
+  - 💥 **BREAKING CHANGE:** CLI tool has been renamed from "typesafe-query-keys-cli" -> "typesafe-query-keys"
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 # [0.1.7](https://github.com/frstycodes/typesafe-query-keys/compare/v0.1.6...v0.1.7) - (2025-08-19)
 
 ## 🧪 Testing
