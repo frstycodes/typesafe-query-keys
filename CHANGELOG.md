@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+# [0.1.7](https://github.com/frstycodes/typesafe-query-keys/compare/v0.1.6...v0.1.7) - (2025-08-19)
+
+## 🧪 Testing
+
+- **integration:** Fix config.include expectations ([304d7d1](https://github.com/frstycodes/typesafe-query-keys/commit/304d7d1f045028938f08d2b8102fd08be17e3b90))
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
 # [0.1.6](https://github.com/frstycodes/typesafe-query-keys/compare/v0.1.5...v0.1.6) - (2025-08-19)
 
 ## 🏠 Refactor
