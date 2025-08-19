@@ -28,6 +28,12 @@ export async function parseConfig(
 
   const validated = validate.data as Config
 
+  const includes = await globifyGitIgnore(validated.include.join('\n'))
+  validated.include = includes.map((p) => p.glob)
+
+  const excludes = await globifyGitIgnore(validated.exclude.join('\n'))
+  validated.exclude = excludes.map((p) => p.glob)
+
   // Load ignore patterns from file if specified
   if (!validated.ignoreFile) return ok(validated)
 
@@ -54,7 +60,7 @@ export async function parseConfig(
   }
 
   const fileIgnorePatterns = await globifyGitIgnore(fileContentRes.value)
-  validated.exclude.push(...fileIgnorePatterns.map((pattern) => pattern.glob))
+  for (const pattern of fileIgnorePatterns) validated.exclude.push(pattern.glob)
 
   return ok(validated)
 }

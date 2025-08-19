@@ -1,5 +1,4 @@
 import fs from 'fs'
-import ignore from 'ignore'
 import path from 'path'
 import type { Plugin, PluginOption } from 'vite'
 import Package from '../../package.json'
@@ -153,10 +152,5 @@ function matchesAnyGlob(filePath: string, globs: string[]): boolean {
   const relative = path.relative(process.cwd(), filePath)
   const normalized = relative.replace(/\\/g, '/')
 
-  // Use the ignore library to check if the file should be ignored
-  // The ignore library handles gitignore-style patterns, including directory patterns with trailing slashes
-  const ig = ignore().add(globs)
-  return (
-    ig.ignores(normalized) || globs.some((g) => path.matchesGlob(normalized, g))
-  )
+  return globs.some((g) => path.matchesGlob(normalized, g))
 }
