@@ -85,8 +85,6 @@ export async function loadConfig(
       Object.entries(configFromCli).filter(([k]) => k !== undefined),
     )
 
-    console.log(filteredCliConfig)
-
     const merged = { ...(result?.config ?? {}), ...filteredCliConfig }
 
     return parseConfig(merged)
