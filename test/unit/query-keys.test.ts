@@ -3,13 +3,15 @@ import { qk } from '../../src/query-keys'
 
 // Extend RegisteredPaths for testing purposes
 declare module '../../src/query-keys' {
-  interface RegisteredPaths {
-    users: true
-    'users/$userId': true
-    'users/$userId/posts': true
-    posts: true
-    'posts/$postId': true
-    settings: true
+  interface Register {
+    patterns: [
+      'users',
+      'users/$userId',
+      'users/$userId/posts',
+      'posts',
+      'posts/$postId',
+      'settings',
+    ]
   }
 }
 

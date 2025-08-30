@@ -3,47 +3,41 @@ import { qk } from '../../src/query-keys'
 
 // Extend RegisteredPaths with a realistic API structure
 declare module '../../src/query-keys' {
-  interface RegisteredPaths {
-    // User paths
-    'users/$userId/profile': true
-    'users/$userId': true
-    users: true
-
-    // Post paths
-    posts: true
-    'posts/$postId': true
-    'posts/trending': true
-    'users/$userId/posts': true
-
-    // Comment paths
-    'comments/$commentId': true
-    'posts/$postId/comments': true
-
-    // Nested paths with multiple parameters
-    'organizations/$orgId/teams/$teamId/members': true
+  interface Register {
+    patterns: [
+      'users/$userId/profile',
+      'users/$userId',
+      'users',
+      'posts',
+      'posts/$postId',
+      'posts/trending',
+      'users/$userId/posts',
+      'comments/$commentId',
+      'posts/$postId/comments',
+      'organizations/$orgId/teams/$teamId/members',
+    ]
   }
 }
 
 describe('Query Keys - Practical Usage', () => {
-  describe('RESTful API patterns', () => {
-    it('should model typical RESTful resource patterns', () => {
+  describe('Tanstack Query key pattern', () => {
+    it('should model typical query key patterns', () => {
       // List resources
-      expect(qk('users')).toEqual(['users'])
+      expect(qk.use('users')).toEqual(['users'])
 
       // Get single resource
-      expect(qk('users/$userId', { params: { userId: 'user123' } })).toEqual([
-        'users',
-        'user123',
-      ])
+      expect(
+        qk.use('users/$userId', { params: { userId: 'user123' } }),
+      ).toEqual(['users', 'user123'])
 
       // Get nested resources
       expect(
-        qk('users/$userId/posts', { params: { userId: 'user123' } }),
+        qk.use('users/$userId/posts', { params: { userId: 'user123' } }),
       ).toEqual(['users', 'user123', 'posts'])
 
       // Get nested resource with filters
       expect(
-        qk('users/$userId/posts', {
+        qk.use('users/$userId/posts', {
           params: { userId: 'user123' },
           search: { status: 'published' },
         }),
@@ -51,7 +45,7 @@ describe('Query Keys - Practical Usage', () => {
     })
 
     it('should support complex nested resources', () => {
-      const queryKey = qk('organizations/$orgId/teams/$teamId/members', {
+      const queryKey = qk.use('organizations/$orgId/teams/$teamId/members', {
         params: {
           orgId: 'org123',
           teamId: 'team456',
@@ -85,7 +79,7 @@ describe('Query Keys - Practical Usage', () => {
 
       // Creating a query using the query keys
       const userQuery = simulateUseQuery(
-        qk('users/$userId', { params: { userId: 'user123' } }),
+        qk.use('users/$userId', { params: { userId: 'user123' } }),
         () => Promise.resolve({ id: 'user123', name: 'John Doe' }),
       )
 

@@ -54,13 +54,15 @@ vi.mock('typescript', () => {
 // Create a mock TS environment
 declare module '../../src/query-keys' {
   interface Register {
-    users: never
-    'users/$userId': never
-    'users/$userId/posts': never
-    posts: never
-    'posts/$postId': never
-    comments: never
-    'comments/$commentId': never
+    patterns: [
+      'users',
+      'users/$userId',
+      'users/$userId/posts',
+      'posts',
+      'posts/$postId',
+      'comments',
+      'comments/$commentId',
+    ]
   }
 }
 
