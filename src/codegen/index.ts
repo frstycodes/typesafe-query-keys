@@ -6,7 +6,6 @@ import { performance } from 'perf_hooks'
 import { hashFile } from '../utils/crypto'
 import { EMPTY, WITH_ENTRIES } from './codegen.content'
 import ts from 'typescript'
-import { QUERY_KEY_TAG } from '../query-keys'
 
 export type QueryKeyPattern = {
   path: string
