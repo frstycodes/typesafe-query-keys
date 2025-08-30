@@ -1,16 +1,20 @@
 // Additive registration interface (declaration-merge target)
 // The generated file augments this interface by adding keys for each path.
 // Keep it empty to allow safe declaration merging.
-export interface RegisteredPaths {
-  // Placeholder to satisfy linting; excluded from public union type
-  __placeholder__?: never
-}
+// export interface RegisteredPaths {
+//   // Placeholder to satisfy linting; excluded from public union type
+//   __placeholder__?: never
+// }
+//
+export interface Register {}
 
 // Union of all registered path keys (excluding the placeholder)
-export type QueryKeyPaths = Exclude<
-  Extract<keyof RegisteredPaths, string>,
-  '__placeholder__'
->
+// export type QueryKeyPaths = Exclude<
+//   Extract<keyof RegisteredPaths, string>,
+//   '__placeholder__'
+// >
+// @ts-expect-error
+export type QueryKeyPaths = Register['patterns'][keyof Register['patterns']]
 
 type ParamValue = string | number | boolean
 // Type helpers for extracting parameters from paths
@@ -71,6 +75,7 @@ function pathToQueryKey<
 /**
  * - Creates and registers a query key pattern
  * - Shows existing registered paths as suggestions but allows new paths too
+ * @queryKey
  */
 export function qk<TPath extends string, TOpts extends object>(
   // The path can be any string, but we'll suggest existing paths

@@ -2,10 +2,11 @@ import fs from 'fs'
 import { glob } from 'glob'
 import { Result, err, ok } from 'neverthrow'
 import path from 'path'
-import ts from 'typescript'
+import { performance } from 'perf_hooks'
 import { hashFile } from '../utils/crypto'
 import { EMPTY, WITH_ENTRIES } from './codegen.content'
-import { performance } from 'perf_hooks'
+import ts from 'typescript'
+import { QUERY_KEY_TAG } from '../query-keys'
 
 export type QueryKeyPattern = {
   path: string
@@ -38,12 +39,14 @@ export async function collectPatterns(
       }
 
       const content = readResult.value
+
       const sourceFile = ts.createSourceFile(
         filePath,
         content,
         ts.ScriptTarget.Latest,
         true,
       )
+
       findCreateQKCalls(sourceFile, queryKeyPatterns)
     }
 
@@ -115,7 +118,7 @@ export function generateTypeDefinitions(
     let content = EMPTY
     if (allPaths.size) {
       const entries = Array.from(allPaths)
-        .map((p) => `\t\t'${p}': true;`)
+        .map((p) => `\t\t\t'${p}',`)
         .sort((a, b) => a.localeCompare(b))
         .join('\n')
       content = WITH_ENTRIES.replace('{ENTRIES}', entries)

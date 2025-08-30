@@ -14,6 +14,8 @@ export const WITH_ENTRIES = `
 import "${name}";
 
 declare module "${name}" {
-  export interface RegisteredPaths { \n{ENTRIES}\n }
+  export interface Register {
+    patterns: [\n{ENTRIES}\n]
+  }
 }
 `
