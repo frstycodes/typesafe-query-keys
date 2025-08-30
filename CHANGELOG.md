@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.0.5](https://github.com/frstycodes/typesafe-query-keys/compare/v1.0.4...v1.0.5) - (2025-08-30)
+
+## 🏠 Refactor
+
+- **codegen:** Remove unused import ([e1c0cbd](https://github.com/frstycodes/typesafe-query-keys/commit/e1c0cbd4197ce1a4b8ca460b909269872f8d3a23))
+
+## 🧪 Testing
+
+- **codegen:** Update tests for new array style query key patterns ([550a71f](https://github.com/frstycodes/typesafe-query-keys/commit/550a71f97cdb8ae1a3636e2e86a6edb58f91973c))
+
+## 🪞 Styling
+
+- **codegen:** Use array to store registered query key patterns ([9c36c9f](https://github.com/frstycodes/typesafe-query-keys/commit/9c36c9f9a027ba0bbe96ead8d6d8166df8ef08ce))
+
 # [1.0.4](https://github.com/frstycodes/typesafe-query-keys/compare/v1.0.3...v1.0.4) - (2025-08-19)
 
 ## 🐛 Bug Fixes
