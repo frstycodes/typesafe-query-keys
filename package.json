@@ -79,21 +79,21 @@
   },
   "dependencies": {
     "chokidar": "^4.0.3",
-    "commander": "^14.0.0",
+    "commander": "^14.0.2",
     "cosmiconfig": "^9.0.0",
     "glob": "^11.0.3",
     "globify-gitignore": "1.0.3",
     "micromatch": "^4.0.8",
     "neverthrow": "^8.2.0",
-    "zod": "^4.0.17"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@favware/cliff-jumper": "6.0.0",
     "@types/jest": "^30.0.0",
-    "@typescript-eslint/eslint-plugin": "8.39.1",
-    "@typescript-eslint/parser": "8.39.1",
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "@typescript-eslint/parser": "8.46.2",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "commitizen": "4.3.1",
@@ -103,10 +103,10 @@
     "eslint-plugin-import": "2.32.0",
     "husky": "9.1.7",
     "prettier": "3.6.2",
-    "rimraf": "^6.0.1",
+    "rimraf": "^6.1.0",
     "tsup": "8.5.0",
     "typescript": "^5.9.2",
-    "vite": "^7.1.2",
+    "vite": "^7.1.12",
     "vitest": "^3.2.4"
   },
   "commitlint": {
