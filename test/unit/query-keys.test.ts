@@ -6,8 +6,15 @@ describe('Query Keys - Core Functionality', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {})
   })
 
-    it('should create simple query keys with no parameters', () => {
   describe('Basic query key generation', () => {
+    it('should create simple query keys with no path', () => {
+      // @ts-expect-error
+      expect(qk()).toEqual([])
+      // @ts-expect-error
+      expect(qk.use()).toEqual([])
+    })
+
+    it('should create query keys with no parameters', () => {
       expect(qk('users')).toEqual(['users'])
       expect(qk('settings')).toEqual(['settings'])
     })
