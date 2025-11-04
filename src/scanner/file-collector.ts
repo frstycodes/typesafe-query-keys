@@ -1,23 +1,36 @@
 import type { Config } from '@/config'
+import { Logs } from '@/logs'
+import { createLogger, Logger } from '@/utils'
+import { safeCall } from '@/utils/safety'
 import fs from 'fs'
 import { globbySync } from 'globby'
 import path from 'path'
 
 export class FileCollector {
   private rootDir: string
+  private logger: Logger
 
   constructor(
     rootDir: string,
     private config: Config,
   ) {
     this.rootDir = path.resolve(rootDir)
+    this.logger = createLogger(config.verbose)
   }
 
   collectFiles() {
-    return globbySync(this.config.include, {
-      ignore: this.config.exclude,
-      cwd: this.rootDir,
-    })
+    return safeCall(
+      () =>
+        globbySync(this.config.include, {
+          cwd: this.rootDir,
+          gitignore: this.config.respectGitIgnore,
+          ignore: this.config.exclude,
+        }),
+      (err) => {
+        this.logger('error', Logs.failedToCollectFiles(err))
+        return null
+      },
+    )
   }
 
   shouldProcess(file: string) {

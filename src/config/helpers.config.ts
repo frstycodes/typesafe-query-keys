@@ -18,6 +18,6 @@ export async function loadConfig(configPath?: string) {
 }
 
 /** Just a type-safe wrapper around the config object. */
-export async function defineConfig(config: Config.Input) {
-  return await Config.parseAsync(config)
+export function defineConfig(config: Config.Input): Config.Input {
+  return config
 }

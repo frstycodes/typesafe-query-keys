@@ -1,5 +1,5 @@
 import { Command } from 'commander'
-import Lib from '../../package.json'
+import { version } from '../../package.json'
 import { loadConfig } from '@/config/helpers.config'
 import { Logs } from '@/logs'
 import { createFileWatcher } from '@/watcher'
@@ -9,7 +9,7 @@ const program = new Command()
 program
   .name('typesafe-query-keys')
   .description('Generate TypeScript types for query keys')
-  .version(Lib.version)
+  .version(version)
   .option('-c, --config <path>', 'Path to the configuration file')
   .option('-w, --watch', 'Watch for file changes')
   .option('-o --once', 'Generate types once and exit')

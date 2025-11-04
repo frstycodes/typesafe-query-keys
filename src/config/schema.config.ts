@@ -2,7 +2,7 @@ import { z } from 'zod/v4'
 import { globifyGitIgnore } from 'globify-gitignore'
 
 const ALWAYS_EXCLUDE = ['vite.config.*', 'node_modules']
-const DEFAULT_INCLUDE = ['**/*.{ts,tsx,js,jsx}']
+const DEFAULT_INCLUDE = ['src/**/*.{ts,tsx,js,jsx}']
 
 export async function globbifyPatterns(patterns: string[]) {
   if (patterns.length == 0) return []
@@ -11,11 +11,11 @@ export async function globbifyPatterns(patterns: string[]) {
   return res
 }
 
-type Config = {
+interface Config {
   /**
    * Glob patterns specifying which files to include for query key extraction.
    * @example ["src/api/**\/*.{ts,tsx}", "routes", "app/queries"]
-   * @note `**\/*.{ts,tsx,js,jsx}` is included by default if nothing is passed.
+   * @note `src/**\/*.{ts,tsx,js,jsx}` is included by default if nothing is passed.
    */
   include: string[]
   /**
@@ -70,7 +70,7 @@ const Config = z.object({
 }) satisfies z.ZodType<Config>
 
 namespace Config {
-  export type Input = z.input<typeof Config>
+  export type Input = Partial<Config>
 }
 
 export { Config }

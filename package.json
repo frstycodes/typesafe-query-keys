@@ -3,9 +3,6 @@
   "version": "1.0.5",
   "description": "Type-safe query keys for TanStack Query",
   "type": "module",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "author": "Sandesh Pandey",
   "license": "MIT",
   "bugs": {
@@ -22,6 +19,7 @@
     "query-keys",
     "type-safe",
     "vite-plugin",
+    "webpack-plugin",
     "codegen"
   ],
   "bin": {
@@ -32,20 +30,31 @@
       "import": "./dist/runtime/index.js",
       "require": "./dist/runtime/index.cjs"
     },
-    "./vite-plugin": {
-      "import": "./dist/vite-plugin/index.js",
-      "require": "./dist/vite-plugin/index.cjs"
+    "./plugin": {
+      "import": "./dist/plugin/index.js",
+      "require": "./dist/plugin/index.cjs"
+    },
+    "./plugin/vite": {
+      "import": "./dist/plugin/vite/index.js",
+      "require": "./dist/plugin/vite/index.cjs"
+    },
+    "./plugin/webpack": {
+      "import": "./dist/plugin/webpack/index.js",
+      "require": "./dist/plugin/webpack/index.cjs"
+    },
+    "./plugin/generic": {
+      "import": "./dist/plugin/generic/index.js",
+      "require": "./dist/plugin/generic/index.cjs"
+    },
+    "./plugin/generic/exec": {
+      "import": "./dist/plugin/generic/exec.js",
+      "require": "./dist/plugin/generic/exec.cjs"
     },
     "./config": {
       "import": "./dist/config/index.js",
       "require": "./dist/config/index.cjs"
     }
   },
-  "files": [
-    "dist",
-    "src",
-    "vite-plugin"
-  ],
   "scripts": {
     "build": "npm run clean && tsup",
     "dev": "tsup --watch",
@@ -66,10 +75,14 @@
   },
   "peerDependencies": {
     "typescript": ">=4",
-    "vite": ">=3"
+    "vite": ">=2",
+    "webpack": ">=3"
   },
   "peerDependenciesMeta": {
     "vite": {
+      "optional": true
+    },
+    "webpack": {
       "optional": true
     }
   },
@@ -101,7 +114,8 @@
     "tsup": "8.5.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "webpack": "5.102.1"
   },
   "commitlint": {
     "extends": [

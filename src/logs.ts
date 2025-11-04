@@ -3,6 +3,7 @@ export const Logs = {
   scanningQueryKeys: '\u{1F50D} Scanning for query keys...\n',
   watchingForFileChanges: '\u{1F680} Watching for file changes...\n',
 
+  failedToCollectFiles: (err: any) => `❌ Failed to collect files: ${err}\n`,
   generatedQueryKeys: (count: number, duration: number) =>
     `\u2728 Generated ${count.toLocaleString()} query keys in ${duration.toFixed(0)}ms\n`,
   errorLoadingConfig: (error: any) =>

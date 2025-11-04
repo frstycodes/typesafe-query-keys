@@ -40,8 +40,11 @@ export class FileWatcher {
     this.watcher = watcher
 
     if (!this.watcher) {
-      const files = this.collector.collectFiles()
-      this.watcher = chokidar.watch(files, {
+      const filesRes = this.collector.collectFiles()
+      if (filesRes.isErr()) return
+
+      this.watcher = chokidar.watch(filesRes.value, {
+        cwd: this.rootDir,
         persistent: true,
         ignoreInitial: true,
       })
@@ -88,10 +91,11 @@ export class FileWatcher {
 
   async extractAllQueryKeys() {
     const queryKeys = new Set<string>()
-    const files = this.collector.collectFiles()
+    const filesRes = this.collector.collectFiles()
+    if (filesRes.isErr()) return []
 
     await Promise.all(
-      files.map(async (file) => {
+      filesRes.value.map(async (file) => {
         const contentRes = await safeCallAsync(readFile(file, 'utf-8'))
         if (contentRes.isErr()) {
           this.logger('warn', Logs.failedToReadFile(file, contentRes.error))
@@ -108,9 +112,10 @@ export class FileWatcher {
     )
 
     for (const key of queryKeys) {
-      for (const parent of extractParentKeys(key)) queryKeys.add(parent)
+      for (const parent of extractParentKeys(key)) {
+        queryKeys.add(parent)
+      }
     }
     return [...queryKeys]
-    // return Array.from(queryKeys).sort((a, b) => a.localeCompare(b))
   }
 }
