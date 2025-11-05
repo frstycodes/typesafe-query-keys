@@ -116,6 +116,6 @@ export class FileWatcher {
         queryKeys.add(parent)
       }
     }
-    return [...queryKeys]
+    return [...queryKeys].sort((a, b) => a.localeCompare(b))
   }
 }
