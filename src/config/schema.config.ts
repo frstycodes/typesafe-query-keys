@@ -15,6 +15,7 @@ interface Config {
   /**
    * Glob patterns specifying which files to include for query key extraction.
    * @example ["src/api/**\/*.{ts,tsx}", "routes", "app/queries"]
+   * @tip For better performance, consider specifying only the necessary files.
    * @note `src/**\/*.{ts,tsx,js,jsx}` is included by default if nothing is passed.
    */
   include: string[]
@@ -30,12 +31,6 @@ interface Config {
    */
   functionNames: string[]
   /**
-   * Whether to respect `.gitignore` files when extracting query keys.
-   * When set to true, the plugin will ignore files and directories listed in `.gitignore`.
-   * @default true
-   */
-  respectGitIgnore: boolean
-  /**
    * Whether to display detailed log messages during the type generation process.
    * When set to true, the plugin will log more information about its progress.
    * @default false
@@ -49,24 +44,23 @@ interface Config {
 }
 
 const Config = z.object({
-  include: z
-    .array(z.string())
-    .optional()
-    .default(DEFAULT_INCLUDE)
-    .transform(globbifyPatterns),
+  include: z.array(z.string()).optional().default(DEFAULT_INCLUDE),
   exclude: z
     .array(z.string())
     .optional()
     .default([])
-    .refine((item) => globbifyPatterns([...item, ...ALWAYS_EXCLUDE])),
+    .transform((item) => uniqueArr([...item, ...ALWAYS_EXCLUDE])),
   functionNames: z
     .array(z.string())
     .optional()
     .default([])
-    .transform((item) => [...item, 'qk']),
-  respectGitIgnore: z.boolean().optional().default(true),
+    .transform((item) => uniqueArr([...item, 'qk'])),
   verbose: z.boolean().optional().default(false),
-  outputPath: z.string().optional().default('.generated/query-keys.d.ts'),
+  outputPath: z
+    .string()
+    .optional()
+    .default('.generated/query-keys.d.ts')
+    .transform(ensureDTS),
 }) satisfies z.ZodType<Config>
 
 namespace Config {
@@ -74,3 +68,25 @@ namespace Config {
 }
 
 export { Config }
+
+function uniqueArr<T>(arr: T[]): T[] {
+  return Array.from(new Set(arr))
+}
+
+function ensureDTS(path: string) {
+  const pathArr = path.split('/')
+  const fileName = pathArr.pop()!
+
+  if (fileName.endsWith('.d.ts')) return path
+
+  const nameArr = fileName.split('.')
+  if (nameArr.length == 1) {
+    nameArr.push('d.ts')
+  } else {
+    nameArr.pop()
+    nameArr.push('d.ts')
+  }
+  const newName = nameArr.join('.')
+  pathArr.push(newName)
+  return pathArr.join('/')
+}
