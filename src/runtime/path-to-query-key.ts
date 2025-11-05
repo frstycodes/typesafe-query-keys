@@ -8,21 +8,23 @@ export function pathToQueryKey<TOpts extends Options>(
   path: string,
   options = {} as TOpts,
 ) {
-  if (!path) return []
+  if (!path) return [] as string[]
   type TResult = TOpts extends { search: any } ? unknown[] : string[]
 
   const { params = {}, search = {} } = options
 
   const segments = path.split('/')
   const result: any[] = []
+  const addToResult = (value: string) => result.push(value.trim())
 
   function processSegment(seg: string) {
-    if (!seg.startsWith('$')) return void result.push(seg)
+    if (!seg.startsWith('$')) return void addToResult(seg)
 
     // strip leading $
     const paramKey = seg.slice(1)
 
-    if (paramKey in params) return void result.push(String(params[paramKey]))
+    if (paramKey in params)
+      return void addToResult(String(params[paramKey]).trim())
     console.warn(`Missing optional parameter: ${paramKey}`)
   }
 
