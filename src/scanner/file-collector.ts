@@ -22,9 +22,8 @@ export class FileCollector {
     return safeCall(
       () =>
         globbySync(this.config.include, {
-          cwd: this.rootDir,
-          gitignore: this.config.respectGitIgnore,
           ignore: this.config.exclude,
+          cwd: this.rootDir,
         }),
       (err) => {
         this.logger('error', Logs.failedToCollectFiles(err))
