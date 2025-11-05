@@ -1,0 +1,3 @@
+import typesafeQueryKeysPluginNextTurbo from '.'
+
+typesafeQueryKeysPluginNextTurbo()

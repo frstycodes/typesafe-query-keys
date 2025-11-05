@@ -1,2 +1,2 @@
-export { defineConfig } from './helpers'
-export type { Config, ConfigInsert } from './config.schema'
+export { type Config } from './schema.config'
+export { defineConfig } from './helpers.config'

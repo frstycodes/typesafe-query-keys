@@ -1,19 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { qk } from '../../src/query-keys'
-
-// Extend RegisteredPaths for testing purposes
-declare module '../../src/query-keys' {
-  interface Register {
-    patterns: [
-      'users',
-      'users/$userId',
-      'users/$userId/posts',
-      'posts',
-      'posts/$postId',
-      'settings',
-    ]
-  }
-}
+import { qk } from '../../src/runtime'
 
 describe('Query Keys - Core Functionality', () => {
   beforeEach(() => {
@@ -21,7 +7,14 @@ describe('Query Keys - Core Functionality', () => {
   })
 
   describe('Basic query key generation', () => {
-    it('should create simple query keys with no parameters', () => {
+    it('should create simple query keys with no path', () => {
+      // @ts-expect-error
+      expect(qk()).toEqual([])
+      // @ts-expect-error
+      expect(qk.use()).toEqual([])
+    })
+
+    it('should create query keys with no parameters', () => {
       expect(qk('users')).toEqual(['users'])
       expect(qk('settings')).toEqual(['settings'])
     })
@@ -80,12 +73,21 @@ describe('Query Keys - Core Functionality', () => {
     it('should handle empty segments correctly', () => {
       expect(qk('users//posts')).toEqual(['users', '', 'posts'])
     })
+
+    it('should handle empty path', () => {
+      expect(qk('')).toEqual([])
+    })
   })
 
   describe('qk.use - strict registered paths', () => {
     it('should create query keys from registered paths', () => {
       const key = qk.use('users/$userId', { params: { userId: '123' } })
       expect(key).toEqual(['users', '123'])
+    })
+
+    it('should work with search parameters', () => {
+      const key = qk.use('users', { search: { active: true } })
+      expect(key).toEqual(['users', { active: true }])
     })
   })
 })

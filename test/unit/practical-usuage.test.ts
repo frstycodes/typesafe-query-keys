@@ -1,23 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { qk } from '../../src/query-keys'
-
-// Extend RegisteredPaths with a realistic API structure
-declare module '../../src/query-keys' {
-  interface Register {
-    patterns: [
-      'users/$userId/profile',
-      'users/$userId',
-      'users',
-      'posts',
-      'posts/$postId',
-      'posts/trending',
-      'users/$userId/posts',
-      'comments/$commentId',
-      'posts/$postId/comments',
-      'organizations/$orgId/teams/$teamId/members',
-    ]
-  }
-}
+import { qk } from '../../src/runtime'
 
 describe('Query Keys - Practical Usage', () => {
   describe('Tanstack Query key pattern', () => {

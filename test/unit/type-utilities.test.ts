@@ -1,10 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { type ExtractParamsFromID, type HasParams } from '../../src/query-keys'
+import {
+  type ExtractParamsFromKey,
+  type HasParams,
+} from '../../src/runtime/types.runtime'
 
 describe('Query Keys - Type Utilities', () => {
-  describe('ExtractParamsFromID', () => {
+  describe('ExtractParamsFromKey', () => {
     it('should extract single parameter', () => {
-      type UserParams = ExtractParamsFromID<'users/$userId'>
+      type UserParams = ExtractParamsFromKey<'users/$userId'>
       const params: UserParams = { userId: '123' }
 
       // These assertions verify the type structure at runtime
@@ -17,7 +20,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should extract multiple parameters', () => {
-      type PostParams = ExtractParamsFromID<'users/$userId/posts/$postId'>
+      type PostParams = ExtractParamsFromKey<'users/$userId/posts/$postId'>
       const params: PostParams = { userId: 'user1', postId: 'post1' }
 
       expect(Object.keys(params).sort()).toEqual(['postId', 'userId'])
@@ -26,7 +29,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should produce empty object for paths without parameters', () => {
-      type NoParams = ExtractParamsFromID<'settings'>
+      type NoParams = ExtractParamsFromKey<'settings'>
       const params: NoParams = {}
 
       expect(Object.keys(params).length).toBe(0)
