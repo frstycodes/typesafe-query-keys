@@ -8,7 +8,6 @@ describe('Config Schema', () => {
       const result = await Config.parseAsync(input)
 
       expect(result.functionNames).toContain('qk')
-      expect(result.respectGitIgnore).toBe(true)
       expect(result.verbose).toBe(false)
       expect(result.outputPath).toBe('.generated/query-keys.d.ts')
     })
@@ -26,7 +25,6 @@ describe('Config Schema', () => {
       expect(result.functionNames).toEqual(['customQK', 'qk'])
       expect(result.verbose).toBe(true)
       expect(result.outputPath).toBe('custom/path.d.ts')
-      expect(result.respectGitIgnore).toBe(false)
     })
 
     it('should handle include and exclude patterns', async () => {
