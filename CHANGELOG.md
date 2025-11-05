@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.1.0](https://github.com/frstycodes/typesafe-query-keys/compare/v1.0.5...v2.0.0) - (2025-11-05)
+
+## 🏠 Refactor
+
+- **types:** Update qk types to show more cleanly ([1c831f2](https://github.com/frstycodes/typesafe-query-keys/commit/1c831f24103f2a68118dc101a734766bcf883d9f))
+- **config:** Refactor config schema and enforce .d.ts ([e372b70](https://github.com/frstycodes/typesafe-query-keys/commit/e372b70aec4f1b19f5320e3af812ef5dfbf3a960))
+- Introduce file watcher, scanner, and generator ([a1875bc](https://github.com/frstycodes/typesafe-query-keys/commit/a1875bcc370d21c478e25b854e0f95ff6d437d48))
+  - 💥 **BREAKING CHANGE:** CLI no longer supports passing config and config schema has been updated
+
+## 🐛 Bug Fixes
+
+- **config:** Apply globbifyPatterns to exclude list ([c755113](https://github.com/frstycodes/typesafe-query-keys/commit/c75511367ec066a616c2b07a3cf1557b1533156a))
+- **runtime:** Trim segments and params in pathToQueryKey ([6ff833e](https://github.com/frstycodes/typesafe-query-keys/commit/6ff833e0c7091afc3921d56316bf670284f267c2))
+- **test:** Fix broken test ([d6c03d2](https://github.com/frstycodes/typesafe-query-keys/commit/d6c03d26bfd2eefe3cc1ef3602d60fb78c423d1c))
+
+## 📝 Documentation
+
+- Update docs for new changes ([9e43a1c](https://github.com/frstycodes/typesafe-query-keys/commit/9e43a1c2dac2425ddd5939858887ef9cde812830))
+
+## 🚀 Features
+
+- **plugin:** Add new plugins ([30ad731](https://github.com/frstycodes/typesafe-query-keys/commit/30ad731ac73e8c2b0565bee4a12d902477e6c3b4))
+  - 💥 **BREAKING CHANGE:** plugins now have different entrypoints
+
+## 🧪 Testing
+
+- **config:** Update tests ([d8ef0ac](https://github.com/frstycodes/typesafe-query-keys/commit/d8ef0ac6cc3c7ab2b304e8c6462b8923c1174690))
+- **test:** Updated tests for new architecture ([d58c3e8](https://github.com/frstycodes/typesafe-query-keys/commit/d58c3e856032762c8df1ed79de28ed8f5eeae4eb))
+
 # [1.0.5](https://github.com/frstycodes/typesafe-query-keys/compare/v1.0.4...v1.0.5) - (2025-08-30)
 
 ## 🏠 Refactor
@@ -155,4 +184,3 @@ All notable changes to this project will be documented in this file.
 ## 🚀 Features
 
 - Initial setup ([43da26d](https://github.com/frstycodes/typesafe-query-keys/commit/43da26d11177b4d6bb5536042f4f27f22022f547))
-
