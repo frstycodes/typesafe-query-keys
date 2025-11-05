@@ -49,7 +49,7 @@ const Config = z.object({
     .array(z.string())
     .optional()
     .default([])
-    .transform((item) => uniqueArr([...item, ...ALWAYS_EXCLUDE])),
+    .transform((item) => globbifyPatterns([...item, ...ALWAYS_EXCLUDE])),
   functionNames: z
     .array(z.string())
     .optional()
