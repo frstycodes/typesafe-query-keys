@@ -26,101 +26,126 @@ A framework-agnostic tool that automatically generates TypeScript types for your
 ## Features
 
 - **Framework Agnostic**: Works with any JavaScript/TypeScript project
-- **CLI Tool**: Command-line interface for easy integration
-- **Vite Plugin**: Built-in Vite plugin for seamless development
-- **File Watching**: Automatic regeneration on file changes
-- **Ignore Patterns**: Flexible ignore pattern support
-- **Config Files**: Support for JavaScript and JSON configuration
+- **Plugins**: Vite and Webpack are currently supported
+- **CLI & Generic Plugin**: CLI tool or a generic plugin for frameworks without a dedicated plugin
+- **Realtime updates**: Automatic regeneration on file changes
 
 ## Installation
 
 ```bash
-# Using npm
 npm install @frsty/typesafe-query-keys
-
-# Using yarn
-yarn add @frsty/typesafe-query-keys
-
-# Using pnpm
-pnpm add @frsty/typesafe-query-keys
 ```
 
 ## Usage
 
 ### CLI Tool
+Use the CLI if there isn't a dedicated plugin for your framework. The CLI automatically picks config from your project root with names: `queryKeys.config.{ts,js}` or any rc style file with the name `queryKeys`
 
-The CLI tool is the most flexible way to use this package. It works with any framework and can be integrated into any build process.
+```ts
+// queryKeys.config.ts
+import { defineConfig } from "@frsty/typesafe-query-keys";
+
+export default defineConfig({
+  include: ['src/**/*.queries.ts'],
+  exclude: ["**/temp", "**/.tanstack"],
+  functionNames: ['createQK', 'queryKey'],
+  ouputPath: ".generated/query-keys.d.ts",
+  verbose: true,
+})
+````
 
 ```bash
 # Generate types once
 npx @frsty/typesafe-query-keys
-# or with pnpm
-pnpm dlx @frsty/typesafe-query-keys
 
 # Watch for changes and regenerate automatically
 npx @frsty/typesafe-query-keys --watch
-# or with pnpm
-pnpm dlx @frsty/typesafe-query-keys --watch
 
-# With custom options
-npx @frsty/typesafe-query-keys --include "src/**/*.{ts,tsx}" --exclude "**/node_modules/**" --output "src/queryKeys.gen.d.ts"
+# Or if you have it installed you can use
+typesafe-query-keys
+typesafe-query-keys --watch
+
+# With config path
+npx @frsty/typesafe-query-keys --config my-custom-config.config.ts"
 ```
 
 See [CLI Documentation](./README-CLI.md) for detailed usage instructions.
 
 ### Vite Plugin
-
-For Vite projects, you can use the built-in plugin for seamless integration. The Vite plugin is a wrapper around the CLI utilities, ensuring consistent behavior.
+For Vite projects, you can use the the plugin.
 
 ```typescript
 // vite.config.ts
 import { defineConfig } from "vite";
-import { typesafeQueryKeysPlugin } from "@frsty/typesafe-query-keys";
+import typesafeQueryKeys from "@frsty/typesafe-query-keys/plugin/vite";
 
 export default defineConfig({
   plugins: [
-    typesafeQueryKeysPlugin({
-      outputFile: "src/queryKeys.gen.d.ts", // optional
-      exclude: [".next"],
+    typesafeQueryKeys({
+      include: ['src/**/*.queries.ts'],
+      exclude: ["**/temp", "**/.tanstack"],
+      functionNames: ['createQK', 'queryKey'],
+      ouputPath: ".generated/query-keys.d.ts",
+      verbose: true,
     }),
   ],
 });
 ```
 
-### Advanced Configuration with Ignore Patterns
+### Webpack Plugin
+For projects that use webpack, you can use the the webpack plugin. e.g. Next.JS
 
 ```typescript
-// vite.config.ts
-import { defineConfig } from "vite";
-import { typesafeQueryKeysPlugin } from "@frsty/typesafe-query-keys";
+// next.config.ts
+import { NextConfig } from "next";
+import typesafeQueryKeys from "@frsty/typesafe-query-keys/plugin/webpack";
 
-export default defineConfig({
-  plugins: [
-    typesafeQueryKeysPlugin({
-      include: ["src/**/*.query.{ts,tsx}"], // Include only query files
-      outputFile: "src/queryKeys.gen.ts", // optional
-      exclude: [
-        "**/node_modules/**",
-        "**/dist/**",
-        "**/*.test.{ts,tsx}",
-        "**/*.spec.{ts,tsx}",
-        "**/generated/**",
-      ],
-      ignoreFile: ".gitignore", // Use existing .gitignore file
-      verbose: true // Enable verbose mode for debugging
-    }),
-  ],
-});
+export default {
+  webpack: (config) => {
+    config.plugins.push(
+      typesafeQueryKeys({
+        include: ['src/**/*.queries.ts'],
+        exclude: ["**/temp", "**/.tanstack"],
+        functionNames: ['createQK', 'queryKey'],
+        ouputPath: ".generated/query-keys.d.ts",
+        verbose: true,
+      }),
+    )
+  },
+} satisfies NextConfig
+```
+
+### Generic Plugin - __DO NOT USE__ if there is a dedicated plugin for your framework
+For projects that don't use webpack or vite, you can use the generic plugin.
+
+This is just an example for Next.JS using turbo but for other frameworks, make sure to call this plugin in the node environment, any file that is involved during the development process:
+
+```typescript
+// next.config.ts
+import { NextConfig } from "next";
+import typesafeQueryKeys from "@frsty/typesafe-query-keys/plugin/generic";
+
+typesafeQueryKeys({
+  include: ['src/**/*.queries.ts'],
+  exclude: ["**/temp", "**/.tanstack"],
+  functionNames: ['createQK', 'queryKey'],
+  ouputPath: ".generated/query-keys.d.ts",
+  verbose: true,
+})
+
+export default {
+  // Next config goes here
+} satisfies NextConfig
 ```
 
 ## Plugin Options
 
 | Option       | Type       | Default                 | Description                              |
 | ------------ | ---------- | ----------------------- | ---------------------------------------- |
-| `include`    | `string[]` | Required                | Glob patterns for files to scan          |
-| `outputFile` | `string`   | `queryKeys.gen.d.ts`    | Output file for generated types          |
-| `exclude`     | `string[]` | `[]`                    | Additional ignore patterns               |
-| `ignoreFile` | `string`   | `undefined`             | Path to ignore file (e.g., `.gitignore`) |
+| `include`    | `string[]` | `[src/**/*.{ts,tsx,js,jsx}]                | Glob patterns for files to scan          |
+| `outputPath` | `string`   | `.generated/query-keys.gen.d.ts`    | Output file for generated types          |
+| `exclude`     | `string[]` | `["node_modules" "vite.config.*"]`                    | Additional ignore patterns               |
+| `functionNames` | `string[]`   | `["qk"]`             | Function names to extract query keys from (`qk` is always included) |
 | `verbose` | `boolean`   | `false`             | Verbose mode for debugging               |
 
 ## How It Works
@@ -131,7 +156,6 @@ The plugin:
 2. **Extracts query key patterns** from the first argument of these calls
 3. **Generates parent paths** automatically (e.g., `"users/$userId/posts"` also registers `"users"` and `"users/$userId"`)
 4. **Watches for file changes** and regenerates types automatically
-5. **Respects ignore patterns** to skip irrelevant files
 
 ## Example Usage in Code
 
@@ -160,30 +184,6 @@ const userPostsQK = qk.use("users/$userId/posts", {
 queryClient.invalidateQueries({queryKey: qk.use("users")})
 ```
 
-## File Watching
-
-The plugin automatically watches for file changes and regenerates types when:
-
-- Files are added, modified, or deleted
-- Changes match the include patterns
-- Files are not ignored by the ignore patterns
-
-## Exclude Patterns
-
-You can specify ignore patterns in multiple ways:
-
-1. **Direct exclude patterns** in the plugin options
-2. **Ignore file** (like `.gitignore`) that the plugin will read
-3. **Combination** of both
-
-The plugin supports basic glob patterns like:
-
-- `**/node_modules/**`
-- `**/*.test.{ts,tsx}`
-- `**/generated/**`
-- `dist/`
-- `.next`
-
 ## Troubleshooting
 
 ### Types not updating on file changes
@@ -191,53 +191,21 @@ The plugin supports basic glob patterns like:
 1. Check that your file matches the include patterns
 2. Verify the file is not being ignored
 3. Look for console logs from the plugin showing regeneration status
+4. Ensure the dev server is running.
+
+### Types not being inferred
+1. Ensure the generated types file is also included in your project's typescript config.
+
+```json
+// tsconfig.json
+{
+  "include": ["[PATH_TO_THE_GENERATED_TYPES_FILE]"]
+}
+```
+
 
 ### Performance issues
 
-1. Use more specific include patterns
+1. Use more specific include patterns e.g. include only query files like "src/**/*.queries.ts"
 2. Add appropriate ignore patterns for large directories
 3. Consider excluding test files and build artifacts
-
-## CLI Tool
-
-For framework-agnostic usage and more control, use the CLI tool:
-
-```bash
-# Generate types once
-npx @frsty/typesafe-query-keys
-
-# Or use without installing
-npx @frsty/typesafe-query-keys
-
-# Watch mode
-npx @frsty/typesafe-query-keys --watch
-
-# With custom configuration
-npx @frsty/typesafe-query-keys --config ./path/to/config.js
-
-# With CLI options
-npx @frsty/typesafe-query-keys --include "src/**/*.{ts,tsx}" --output "src/custom.gen.d.ts" --verbose
-```
-
-### CLI Features
-
-- **Framework Agnostic**: Works with any JavaScript/TypeScript project
-- **Config Files**: Support for JavaScript and JSON configuration ["queryKeys.config.{ts,js}", "queryKeys.config.json", ".queryKeysrc"]
-    - Also exports a `defineConfig` function from "@frsty/typesafe-query-keys/config" as a type-safe way to define configuration options
-    ```ts
-    import { defineConfig } from "@frsty/typesafe-query-keys/config";
-
-    export default defineConfig({
-      include: ["src/**/*.{ts,tsx}"],
-      exclude: ["**/node_modules/**", "**/*.test.{ts,tsx}"],
-      outputFile: "src/queryKeys.gen.d.ts",
-      ignoreFile: ".gitignore",
-      verbose: true,
-    });
-    ```
-- **CLI Options**: Command-line options for include, exclude, output path, and more
-- **File Watching**: Cross-platform file watching with Chokidar
-- **Ignore Patterns**: Flexible ignore pattern support
-- **Build Integration**: Easy integration with any build process
-
-See [CLI Documentation](./README-CLI.md) for complete usage instructions and examples.
