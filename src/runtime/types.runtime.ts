@@ -9,7 +9,7 @@ export type ParamValue = string | number | boolean
 // Type helpers for extracting parameters from paths
 type INTERNAL__ExtractParamsFromKey<T extends string> =
   T extends `${string}$${infer Param}/${infer Rest}`
-    ? { [K in Param]: ParamValue } & ExtractParamsFromKey<Rest>
+    ? { [K in Param]: ParamValue } & INTERNAL__ExtractParamsFromKey<Rest>
     : T extends `${string}$${infer Param}`
       ? { [K in Param]: ParamValue }
       : Record<never, never>
@@ -19,7 +19,7 @@ export type ExtractParamsFromKey<T extends string> = Prettify<
 >
 
 export type HasParams<TPath extends string> =
-  keyof ExtractParamsFromKey<TPath> extends never ? false : true
+  keyof INTERNAL__ExtractParamsFromKey<TPath> extends never ? false : true
 
 export interface Register {}
 
