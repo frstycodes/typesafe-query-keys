@@ -1,28 +1,9 @@
 import { loadConfig } from '@/config/helpers.config'
 import { Config } from '@/config/schema.config'
+import { singleton } from '@/utils/singleton'
 import { createFileWatcher } from '@/watcher'
 
-/**
- *  __DO NOT USE THIS__ if there is a dedicated plugin for your framework/bundler.
- *
- * - This is a generic plugin that can be used with frameworks that are not officially supported.
- * - To use this plugin, call this plugin inside a file that runs in the node environment. e.g. `next.config.ts`
- *
- * @example
- * import { NextConfig } from "next";
- * import { typesafeQueryKeysPluginGeneric } from "@frsty/typesafe-query-keys/plugin/generic"
- *
- * typesafeQueryKeysPluginGeneric({
- *   include: ["app/**\/*.queries.ts"],
- *   functionNames: ["createQK", "queryKey"]
- })
- *
- * export default {
- * // Your next config goes here.
- * } satisfies NextConfig
- *
- */
-export async function typesafeQueryKeysPluginGeneric(opts?: Config.Input) {
+async function plugin(opts?: Config.Input) {
   if (process.env.NODE_ENV !== 'development') return
 
   const config = opts
@@ -34,3 +15,42 @@ export async function typesafeQueryKeysPluginGeneric(opts?: Config.Input) {
   fileWatcher.scanAndGenerate()
   fileWatcher.start()
 }
+
+/**
+ * Generic plugin for typesafe query key generation in unsupported frameworks.
+ *
+ * **⚠️ Warning:** Only use this plugin if there is no dedicated plugin available for your framework/bundler.
+ *
+ * # Overview
+ * This plugin provides typesafe query key generation for frameworks that don't have official support.
+ *
+ * # Usage
+ * Call this plugin in a file that runs in the Node.js environment (e.g., `next.config.ts`.
+ * The plugin will only run in development mode (`NODE_ENV === 'development'`).
+ *
+ * @example
+ * ```typescript
+ * // next.config.ts
+ * import { NextConfig } from "next";
+ * import { typesafeQueryKeysPluginGeneric } from "@frsty/typesafe-query-keys/plugin/generic"
+ *
+ * // Initialize the plugin with your configuration
+ * typesafeQueryKeysPluginGeneric({
+ *   include: ['src/**\/*.queries.ts'],
+ *   exclude: ["temp", ".tanstack"],
+ *   functionNames: ['createQK', 'queryKey'],
+ *   outputPath: ".generated/query-keys.d.ts",
+ *   respectGitIgnore: true,
+ *   verbose: true,
+ * });
+ *
+ * const nextConfig: NextConfig = {
+ *   // Your Next.js configuration
+ * };
+ *
+ * export default nextConfig;
+ * ```
+ *
+ * @see {@link https://github.com/frstycodes/typesafe-query-keys#readme Documentation} for more details
+ */
+export const typesafeQueryKeysPluginGeneric = singleton(plugin)
