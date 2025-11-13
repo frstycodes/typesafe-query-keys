@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.1.1](https://github.com/frstycodes/typesafe-query-keys/compare/v1.1.0...v2.0.0) - (2025-11-13)
+
+## 🐛 Bug Fixes
+
+- **types:** Allow function type to work properly without setup ([2e00294](https://github.com/frstycodes/typesafe-query-keys/commit/2e002944b5fadbdc24cd6cb9250b88766fe2812c))
+
+## 📝 Documentation
+
+- **readme:** Remove CLI documentation reference ([7c2c4a1](https://github.com/frstycodes/typesafe-query-keys/commit/7c2c4a198521fa3653b681b24a155774f4a82f47))
+
 # [1.1.0](https://github.com/frstycodes/typesafe-query-keys/compare/v1.0.5...v2.0.0) - (2025-11-05)
 
 ## 🏠 Refactor
@@ -9,7 +19,7 @@ All notable changes to this project will be documented in this file.
 - **types:** Update qk types to show more cleanly ([1c831f2](https://github.com/frstycodes/typesafe-query-keys/commit/1c831f24103f2a68118dc101a734766bcf883d9f))
 - **config:** Refactor config schema and enforce .d.ts ([e372b70](https://github.com/frstycodes/typesafe-query-keys/commit/e372b70aec4f1b19f5320e3af812ef5dfbf3a960))
 - Introduce file watcher, scanner, and generator ([a1875bc](https://github.com/frstycodes/typesafe-query-keys/commit/a1875bcc370d21c478e25b854e0f95ff6d437d48))
-  - 💥 **BREAKING CHANGE:** CLI no longer supports passing config and config schema has been updated
+  - CLI no longer supports passing config and config schema has been updated
 
 ## 🐛 Bug Fixes
 
@@ -24,7 +34,7 @@ All notable changes to this project will be documented in this file.
 ## 🚀 Features
 
 - **plugin:** Add new plugins ([30ad731](https://github.com/frstycodes/typesafe-query-keys/commit/30ad731ac73e8c2b0565bee4a12d902477e6c3b4))
-  - 💥 **BREAKING CHANGE:** plugins now have different entrypoints
+  - plugins now have different entrypoints
 
 ## 🧪 Testing
 
