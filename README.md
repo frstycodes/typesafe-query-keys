@@ -69,8 +69,6 @@ typesafe-query-keys --watch
 npx @frsty/typesafe-query-keys --config my-custom-config.config.ts"
 ```
 
-See [CLI Documentation](./README-CLI.md) for detailed usage instructions.
-
 ### Vite Plugin
 For Vite projects, you can use the the plugin.
 
