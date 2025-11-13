@@ -8,8 +8,8 @@ export function pathToQueryKey<TOpts extends Options>(
   path: string,
   options = {} as TOpts,
 ) {
-  if (!path) return [] as string[]
   type TResult = TOpts extends { search: any } ? unknown[] : string[]
+  if (!path) return [] as unknown as TResult
 
   const { params = {}, search = {} } = options
 

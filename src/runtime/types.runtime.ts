@@ -22,6 +22,8 @@ export type HasParams<TPath extends string> =
   keyof INTERNAL__ExtractParamsFromKey<TPath> extends never ? false : true
 
 export interface Register {}
+export type RegisterValue<Key> = Key extends keyof Register
+  ? Register[Key]
+  : never
 
-// @ts-expect-error
-export type QueryKeys = Register['queryKeys'][number]
+export type QueryKeys = RegisterValue<'queryKeys'>
