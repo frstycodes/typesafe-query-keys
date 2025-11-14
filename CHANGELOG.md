@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.1.2](https://github.com/frstycodes/typesafe-query-keys/compare/v1.1.1...v1.1.2) - (2025-11-14)
+
+## 🐛 Bug Fixes
+
+- **types:** Convert array type to union ([1b8197c](https://github.com/frstycodes/typesafe-query-keys/commit/1b8197cd1ecd7dada33889e410adc7c948b3baf2))
+
 # [1.1.1](https://github.com/frstycodes/typesafe-query-keys/compare/v1.1.0...v2.0.0) - (2025-11-13)
 
 ## 🐛 Bug Fixes
