@@ -26,4 +26,4 @@ export type RegisterValue<Key> = Key extends keyof Register
   ? Register[Key]
   : never
 
-export type QueryKeys = RegisterValue<'queryKeys'>
+export type QueryKeys = RegisterValue<'queryKeys'>[number]
