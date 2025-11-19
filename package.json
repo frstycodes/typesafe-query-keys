@@ -4,6 +4,7 @@
   "description": "Type-safe query keys for TanStack Query",
   "type": "module",
   "author": "Sandesh Pandey",
+  "main": ".src/runtime/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/frstycodes/typesafe-query-keys/issues"
