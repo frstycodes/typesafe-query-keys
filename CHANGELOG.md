@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.1.3](https://github.com/frstycodes/typesafe-query-keys/compare/v1.1.2...v1.1.3) - (2025-11-19)
+
 # [1.1.2](https://github.com/frstycodes/typesafe-query-keys/compare/v1.1.1...v1.1.2) - (2025-11-14)
 
 ## 🐛 Bug Fixes
