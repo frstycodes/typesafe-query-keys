@@ -26,8 +26,7 @@ export const processFile = (filePath: string) =>
 
     const mTime = yield* getMtime(filePath)
 
-    const hasMTimeChanged = cache.hasMtimeChanged(filePath, mTime)
-    if (!hasMTimeChanged) {
+    if (!cache.hasMtimeChanged(filePath, mTime)) {
       logger.debug('Using cached data for:', filePath)
       return false
     }
@@ -43,15 +42,14 @@ export const processFile = (filePath: string) =>
 
     const hash = yield* hashString(content)
 
-    const hasHashChanged = cache.hasHashChanged(filePath, hash)
-    if (!hasHashChanged) {
+    if (!cache.hasHashChanged(filePath, hash)) {
       logger.debug('Using cached data for:', filePath)
       return false
     }
 
     const keys = yield* extractQueryKeys({ filePath, content })
 
-    if (cache.haveKeysChanged(filePath, keys)) {
+    if (!cache.haveKeysChanged(filePath, keys)) {
       logger.debug('Using cached data for:', filePath)
       return false
     }
