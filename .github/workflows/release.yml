@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - beta
 
 jobs:
   release:
@@ -62,6 +63,19 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Determine release channel
+        id: release-channel
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/beta" ]; then
+            echo "channel=beta" >> $GITHUB_OUTPUT
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "npm_tag=beta" >> $GITHUB_OUTPUT
+          else
+            echo "channel=latest" >> $GITHUB_OUTPUT
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            echo "npm_tag=latest" >> $GITHUB_OUTPUT
+          fi
+
       - name: Check for version changes
         id: check-version
         run: |
@@ -89,7 +103,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           generateReleaseNotes: true
-          prerelease: false
+          prerelease: ${{ steps.release-channel.outputs.is_prerelease }}
           tag: v${{ steps.check-version.outputs.version }}
           name: v${{ steps.check-version.outputs.version }}
           body: |
@@ -97,6 +111,6 @@ jobs:
 
       - name: Publish to npm
         if: steps.check-version.outputs.should_publish == 'true'
-        run: pnpm publish --no-git-checks
+        run: pnpm publish --no-git-checks --tag ${{ steps.release-channel.outputs.npm_tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
