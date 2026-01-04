@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+# [2.0.0-beta.0](https://github.com/frstycodes/typesafe-query-keys/compare/v1.2.0-beta.0...v2.0.0-beta.0) - (2026-01-04)
+
+## 🐛 Bug Fixes
+
+- **engine:** Fix check for cache keys change logic ([761a71d](https://github.com/frstycodes/typesafe-query-keys/commit/761a71dd4ae9f447e20b28c9d73099148dd8260d))
+- Minor bug fixes ([f2a55f3](https://github.com/frstycodes/typesafe-query-keys/commit/f2a55f3cbc25d6f2d515d6e4c8c9c77f85cfad4e))
+
+## 📝 Documentation
+
+- Update docs to match new changes ([3f2b1a8](https://github.com/frstycodes/typesafe-query-keys/commit/3f2b1a8f9ac573bf27a1bdcf191ddab99cbef7c5))
+
+## 🚀 Features
+
+- **cache:** Add cache and migrate to effect ([00d88e2](https://github.com/frstycodes/typesafe-query-keys/commit/00d88e2f3cdaa9bd4a0b859fc20d1f9ac5c25b3f))
+  - 💥 **BREAKING CHANGE:** CLI has been removed in favor of the generic plugin, and config has been updated to
+remove functionNames support to ensure consistency with function name used.
+
 # [1.1.3](https://github.com/frstycodes/typesafe-query-keys/compare/v1.1.2...v1.1.3) - (2025-11-19)
 
 # [1.1.2](https://github.com/frstycodes/typesafe-query-keys/compare/v1.1.1...v1.1.2) - (2025-11-14)
