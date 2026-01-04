@@ -1,41 +1,34 @@
-import { pathToQueryKey } from './path-to-query-key'
-import type {
-  BaseOptions,
-  ExtractParamsFromKey,
-  HasParams,
-  QueryKeys,
-} from './types.runtime'
+import { pathToQueryKey } from './utils/path-to-query-key'
+import { QueryKeyParser } from './types'
+
+type QKFunction = QueryKeyParser.Fn<'loose'> & {
+  /**
+   * - Functionally identical to `qk` but enforces the use of registered paths
+   * - Only allows using previously registered paths
+   */
+  use: QueryKeyParser.Fn<'strict'>
+}
 
 /**
  * - Creates and registers a query key pattern
  * - Shows existing registered paths as suggestions but allows new paths too
+ * @example
+ * qk('user/$userId', { params: { userId: 123 } }) // string[]
+ * qk('user/$userId', {
+ *  params: { userId: 123 },
+ *  search: { q: "John" },
+ * }) // unknown[]
+ * @note
+ * Passing search will return the type `unknown[]`
  */
-export function qk<
-  TPath extends (string & {}) | QueryKeys,
-  TOpts extends BaseOptions,
->(
-  // The path can be any string, but we'll suggest existing paths
-  path: TPath,
-  // If the path template has params, options is required; otherwise optional
-  ...args: HasParams<TPath> extends true
-    ? [options: { params: ExtractParamsFromKey<TPath> } & TOpts]
-    : [options?: TOpts]
-) {
-  return pathToQueryKey(path, args[0])
+export const qk: QKFunction = (path, ...args) => {
+  return pathToQueryKey(path, args[0] ?? {})
 }
-qk.use = useQK
 
-/**
- * - Functionally equivalent to `qk` but enforces the use of registered paths
- * - References a registered query key pattern
- * - Only allows using previously registered paths
- */
-export function useQK<TPath extends QueryKeys, TOpts extends BaseOptions>(
-  path: TPath,
-  // If the path template has params, options is required; otherwise optional
-  ...args: HasParams<TPath> extends true
-    ? [options: { params: ExtractParamsFromKey<TPath> } & TOpts]
-    : [options?: TOpts]
-) {
-  return pathToQueryKey(path, args[0])
+// Runtime behavior is identical to `qk`, which is why the implementation looks the same
+qk.use = function qkUse(path, ...args) {
+  return pathToQueryKey(path, args[0] ?? {})
 }
+
+/** @internal The name of the query key function */
+export const FUNCTION_NAME = qk.name

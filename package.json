@@ -88,11 +88,16 @@
     }
   },
   "dependencies": {
+    "@effect/platform": "0.94.1",
+    "@effect/platform-node": "0.104.0",
     "chokidar": "^4.0.3",
     "commander": "^14.0.0",
     "cosmiconfig": "^9.0.0",
+    "effect": "3.19.14",
     "globby": "15.0.0",
     "globify-gitignore": "1.0.3",
+    "ignore": "7.0.5",
+    "micromatch": "4.0.8",
     "neverthrow": "^8.2.0",
     "zod": "4.1.12"
   },
@@ -100,6 +105,7 @@
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@favware/cliff-jumper": "6.0.0",
+    "@types/micromatch": "4.0.10",
     "@typescript-eslint/eslint-plugin": "8.39.1",
     "@typescript-eslint/parser": "8.39.1",
     "@vitest/coverage-v8": "^3.2.4",
