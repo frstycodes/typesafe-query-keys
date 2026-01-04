@@ -32,11 +32,11 @@ export function enrichKeysWithParents(allKeys: readonly string[]): Set<string> {
 
 export type ExtractQueryKeysProps = {
   filePath: string
-  sourceText: string
+  content: string
 }
 export const extractQueryKeys = ({
   filePath,
-  sourceText,
+  content: sourceText,
 }: ExtractQueryKeysProps) =>
   Effect.gen(function* () {
     const logger = yield* LoggerService

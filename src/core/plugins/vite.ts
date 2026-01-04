@@ -12,8 +12,8 @@ export default function typesafeQueryKeysPluginVite(
   return {
     name: PLUGIN_NAME,
 
-    buildStart() {
-      engine.scanAndGenerate()
+    async buildStart() {
+      await engine.scanAndGenerate()
     },
 
     configureServer(server) {

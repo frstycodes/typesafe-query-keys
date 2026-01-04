@@ -37,7 +37,7 @@ interface ConfigImpl {
   outputPath: string
   /**
    * Debounce delay in milliseconds before triggering re-generation after file changes.
-   * @default 100
+   * @default 1000
    */
   debounceDelay: number
 }

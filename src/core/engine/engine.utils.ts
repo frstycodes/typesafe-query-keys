@@ -1,6 +1,6 @@
 import { FileSystem } from '@effect/platform'
 import chokidar from 'chokidar'
-import { Effect, Option } from 'effect'
+import { Effect } from 'effect'
 
 import { WatcherError } from '@/core/errors'
 import {
@@ -16,6 +16,7 @@ import {
   hashString,
 } from '@/core/utils'
 import { writeQueryKeysToFile } from '@/core/writer/write-query-keys-to-file'
+import { getMtime } from '../utils/fs'
 
 export const processFile = (filePath: string) =>
   Effect.gen(function* () {
@@ -23,13 +24,7 @@ export const processFile = (filePath: string) =>
     const logger = yield* LoggerService
     const fs = yield* FileSystem.FileSystem
 
-    const mTime = yield* fs.stat(filePath).pipe(
-      Effect.map((s) => Option.getOrElse(s.mtime, () => new Date(0)).getTime()),
-      Effect.catchAll((error) => {
-        logger.warn('Failed to get file mtime, using default value 0', error)
-        return Effect.succeed(0)
-      }),
-    )
+    const mTime = yield* getMtime(filePath)
 
     const hasMTimeChanged = cache.hasMtimeChanged(filePath, mTime)
     if (!hasMTimeChanged) {
@@ -54,10 +49,12 @@ export const processFile = (filePath: string) =>
       return false
     }
 
-    const keys = yield* extractQueryKeys({
-      filePath,
-      sourceText: content,
-    })
+    const keys = yield* extractQueryKeys({ filePath, content })
+
+    if (cache.haveKeysChanged(filePath, keys)) {
+      logger.debug('Using cached data for:', filePath)
+      return false
+    }
 
     logger.debug(`Scanned ${filePath}: found ${keys.length} keys`)
 

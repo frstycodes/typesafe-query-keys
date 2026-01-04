@@ -41,6 +41,7 @@ const watch = (fsWatcher?: FSWatcher) =>
       })
     })
 
+    logger.log(Logs.watchingForFileChanges)
     yield* eventStream.pipe(
       Stream.groupedWithin(100, Duration.millis(config.debounceDelay)),
       Stream.mapEffect((events) =>
@@ -65,8 +66,6 @@ const watch = (fsWatcher?: FSWatcher) =>
       ),
       Stream.runDrain,
     )
-
-    logger.log(Logs.watchingForFileChanges)
   })
 
 const scanAndGenerate = Effect.gen(function* () {

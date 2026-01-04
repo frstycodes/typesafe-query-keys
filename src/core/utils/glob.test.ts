@@ -175,6 +175,3 @@ describe('globbify', () => {
     })
   })
 })
-
-const res = globbify(['index.ts']).matches('src/index.ts')
-console.log(res)

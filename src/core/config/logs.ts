@@ -13,5 +13,5 @@ export const Logs = {
     `Invalid qk() call in ${path}:L${pos[0] + 1}:${pos[1] + 1}\n` +
     `Expected: qk("query/key/pattern", {...})\n` +
     `Got: qk() with ${argType}\n` +
-    `If you think this is a valid, make sure the first argument to the qk() function is a string literal.`,
+    `If you think this is valid, make sure the first argument to the qk() function is a string literal.`,
 }

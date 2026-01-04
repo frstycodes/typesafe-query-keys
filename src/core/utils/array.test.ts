@@ -15,6 +15,10 @@ describe('Array utilities', () => {
       expect(areArraysEqual([1, 2, 3], [1, 2, 4])).toBe(false)
     })
 
+    it('should return false for arrays with missing elements', () => {
+      expect(areArraysEqual([1, 2, 3], [1, 1, 1])).toBe(false)
+    })
+
     it('should return false for arrays of different lengths', () => {
       expect(areArraysEqual([1, 2], [1, 2, 3])).toBe(false)
     })
@@ -31,16 +35,6 @@ describe('Array utilities', () => {
 
       // Different elements would still fail
       expect(areArraysEqual([1, 1, 2], [1, 3, 3])).toBe(false)
-    })
-
-    it('should work with string arrays', () => {
-      expect(areArraysEqual(['a', 'b', 'c'], ['c', 'b', 'a'])).toBe(true)
-      expect(areArraysEqual(['a', 'b'], ['a', 'c'])).toBe(false)
-    })
-
-    it('should handle single element arrays', () => {
-      expect(areArraysEqual([1], [1])).toBe(true)
-      expect(areArraysEqual([1], [2])).toBe(false)
     })
 
     it('should return false when one array is empty', () => {

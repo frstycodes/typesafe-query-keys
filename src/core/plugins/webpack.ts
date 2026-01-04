@@ -11,6 +11,11 @@ function plugin(opts = {} as Config.Input) {
 
   let hasInitialized = false
   let isWatching = false
+  let signalHandlersRegistered = false
+
+  const cleanup = () => {
+    if (isWatching) engine.dispose()
+  }
 
   return {
     apply(compiler) {
@@ -47,11 +52,12 @@ function plugin(opts = {} as Config.Input) {
         }
       })
 
-      const cleanup = () => {
-        if (isWatching) engine.dispose()
+      // Register signal handlers only once per plugin instance
+      if (!signalHandlersRegistered) {
+        signalHandlersRegistered = true
+        process.on('SIGINT', cleanup)
+        process.on('SIGTERM', cleanup)
       }
-      process.on('SIGINT', cleanup)
-      process.on('SIGTERM', cleanup)
     },
   } satisfies WebpackPluginInstance
 }
@@ -82,7 +88,7 @@ function plugin(opts = {} as Config.Input) {
  *
  * @example
  * // If using Next.JS without turbo
- * import { NextConfig } from "next"
+ * import { NextConfig } from "next";
  * import typesafeQueryKeys from '@frsty/typesafe-query-keys/plugin/webpack');
  *
  * export default {

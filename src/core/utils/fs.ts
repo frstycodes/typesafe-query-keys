@@ -2,7 +2,7 @@ import { Effect, Option } from 'effect'
 import { FileSystem } from '@effect/platform'
 import { LoggerService } from '../services'
 
-export const getMtime = (filePath: string, fallback?: number) =>
+export const getMtime = (filePath: string) =>
   Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
     const logger = yield* LoggerService
@@ -12,12 +12,11 @@ export const getMtime = (filePath: string, fallback?: number) =>
       Effect.map((date) => date.getTime()),
       Effect.catchAll((error) => {
         logger.warn(
-          `Failed to get file modification time, using fallback value ${fallback}`,
+          `Failed to get file modification time, using fallback value 0`,
           error,
         )
         return Effect.succeed(0)
       }),
-      fallback ? Effect.ignore : (e) => e,
     )
 
     return mTime
