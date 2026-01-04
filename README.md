@@ -25,10 +25,11 @@ A framework-agnostic tool that automatically generates TypeScript types for your
 
 ## Features
 
-- **Framework Agnostic**: Works with any JavaScript/TypeScript project
-- **Plugins**: Vite and Webpack are currently supported
-- **CLI & Generic Plugin**: CLI tool or a generic plugin for frameworks without a dedicated plugin
-- **Realtime updates**: Automatic regeneration on file changes
+- **0.4kb bundle size** - Traditional query key factories add 2-5kb+ per domain
+- **Build-time type generation** - Full type safety with zero runtime overhead
+- **Framework agnostic** - Works with any JavaScript/TypeScript project
+- **Multiple plugins** - Vite, Webpack, and Generic plugins supported
+- **Auto-regeneration** - Types update automatically on file changes
 
 ## Installation
 
@@ -37,37 +38,6 @@ npm install @frsty/typesafe-query-keys
 ```
 
 ## Usage
-
-### CLI Tool
-Use the CLI if there isn't a dedicated plugin for your framework. The CLI automatically picks config from your project root with names: `queryKeys.config.{ts,js}` or any rc style file with the name `queryKeys`
-
-```ts
-// queryKeys.config.ts
-import { defineConfig } from "@frsty/typesafe-query-keys";
-
-export default defineConfig({
-  include: ['src/**/*.queries.ts'],
-  exclude: ["**/temp", "**/.tanstack"],
-  functionNames: ['createQK', 'queryKey'],
-  ouputPath: ".generated/query-keys.d.ts",
-  verbose: true,
-})
-````
-
-```bash
-# Generate types once
-npx @frsty/typesafe-query-keys
-
-# Watch for changes and regenerate automatically
-npx @frsty/typesafe-query-keys --watch
-
-# Or if you have it installed you can use
-typesafe-query-keys
-typesafe-query-keys --watch
-
-# With config path
-npx @frsty/typesafe-query-keys --config my-custom-config.config.ts"
-```
 
 ### Vite Plugin
 For Vite projects, you can use the the plugin.
@@ -80,11 +50,12 @@ import typesafeQueryKeys from "@frsty/typesafe-query-keys/plugin/vite";
 export default defineConfig({
   plugins: [
     typesafeQueryKeys({
+      rootDir: process.cwd(),
       include: ['src/**/*.queries.ts'],
       exclude: ["**/temp", "**/.tanstack"],
-      functionNames: ['createQK', 'queryKey'],
-      ouputPath: ".generated/query-keys.d.ts",
-      verbose: true,
+      outputPath: "query-keys.d.ts",
+      debugMode: false,
+      debounceDelay: 1000,
     }),
   ],
 });
@@ -102,11 +73,12 @@ export default {
   webpack: (config) => {
     config.plugins.push(
       typesafeQueryKeys({
+        rootDir: process.cwd(),
         include: ['src/**/*.queries.ts'],
         exclude: ["**/temp", "**/.tanstack"],
-        functionNames: ['createQK', 'queryKey'],
-        ouputPath: ".generated/query-keys.d.ts",
-        verbose: true,
+        outputPath: "query-keys.d.ts",
+        debugMode: false,
+        debounceDelay: 1000,
       }),
     )
   },
@@ -124,11 +96,12 @@ import { NextConfig } from "next";
 import typesafeQueryKeys from "@frsty/typesafe-query-keys/plugin/generic";
 
 typesafeQueryKeys({
+  rootDir: process.cwd(),
   include: ['src/**/*.queries.ts'],
   exclude: ["**/temp", "**/.tanstack"],
-  functionNames: ['createQK', 'queryKey'],
-  ouputPath: ".generated/query-keys.d.ts",
-  verbose: true,
+  outputPath: "query-keys.d.ts",
+  debugMode: false,
+  debounceDelay: 1000,
 })
 
 export default {
@@ -140,11 +113,12 @@ export default {
 
 | Option       | Type       | Default                 | Description                              |
 | ------------ | ---------- | ----------------------- | ---------------------------------------- |
-| `include`    | `string[]` | `[src/**/*.{ts,tsx,js,jsx}]                | Glob patterns for files to scan          |
-| `outputPath` | `string`   | `.generated/query-keys.gen.d.ts`    | Output file for generated types          |
-| `exclude`     | `string[]` | `["node_modules" "vite.config.*"]`                    | Additional ignore patterns               |
-| `functionNames` | `string[]`   | `["qk"]`             | Function names to extract query keys from (`qk` is always included) |
-| `verbose` | `boolean`   | `false`             | Verbose mode for debugging               |
+| `rootDir`    | `string`   | `process.cwd()`         | Root directory for resolving relative paths |
+| `include`    | `string[]` | `[]`                    | Glob patterns for files to scan          |
+| `exclude`    | `string[]` | `["node_modules/"]`     | Glob patterns for files to ignore        |
+| `outputPath` | `string`   | `"query-keys.d.ts"`     | Output file path for generated types     |
+| `debugMode`  | `boolean`  | `false`                 | Enable detailed logging for debugging    |
+| `debounceDelay` | `number` | `1000`                | Debounce delay in ms before re-generation |
 
 ## How It Works
 
@@ -180,6 +154,262 @@ const userPostsQK = qk.use("users/$userId/posts", {
 
 // Invalidate all user queries
 queryClient.invalidateQueries({queryKey: qk.use("users")})
+```
+
+## Migration Guide
+
+### From Traditional Query Keys
+
+If you're currently using traditional query key factories or string arrays, here's how to migrate:
+
+#### Before (Traditional Approach)
+
+```typescript
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+// Manual query key factory
+const userKeys = {
+  all: ['users'] as const,
+  lists: () => [...userKeys.all, 'list'] as const,
+  list: (filters: string) => [...userKeys.lists(), { filters }] as const,
+  details: () => [...userKeys.all, 'detail'] as const,
+  detail: (id: string) => [...userKeys.details(), id] as const,
+};
+
+// Usage
+function UserProfile({ userId }: { userId: string }) {
+  const queryClient = useQueryClient();
+  
+  const { data } = useQuery({
+    queryKey: userKeys.detail(userId),
+    queryFn: () => fetchUser(userId),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: updateUser,
+    onSuccess: () => {
+      // Invalidate manually with factory
+      queryClient.invalidateQueries({ queryKey: userKeys.detail(userId) });
+    },
+  });
+
+  return <div>{data?.name}</div>;
+}
+```
+
+#### After (With Typesafe Query Keys)
+
+```typescript
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { qk } from "@frsty/typesafe-query-keys";
+
+// No manual factory needed! Just use qk() in your queries
+function UserProfile({ userId }: { userId: string }) {
+  const queryClient = useQueryClient();
+  
+  const { data } = useQuery({
+    // Pattern automatically registered - types generated at build time
+    queryKey: qk("users/$userId", { params: { userId } }),
+    queryFn: () => fetchUser(userId),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: updateUser,
+    onSuccess: () => {
+      // Invalidate with autocomplete - no manual factory needed!
+      queryClient.invalidateQueries({ 
+        queryKey: qk.use("users/$userId", { params: { userId } })
+      });
+      
+      // Or invalidate all user queries
+      queryClient.invalidateQueries({ queryKey: qk.use("users") });
+    },
+  });
+
+  return <div>{data?.name}</div>;
+}
+```
+
+### Migration Steps
+
+1. **Install the package**:
+   ```bash
+   npm install @frsty/typesafe-query-keys
+   ```
+
+2. **Configure your build tool** (Vite, Webpack, or Generic plugin - see [Usage](#usage))
+
+3. **Replace query key factories** with `qk()` patterns:
+   - `['users', userId]` → `qk("users/$userId", { params: { userId } })`
+   - `['posts', postId, 'comments']` → `qk("posts/$postId/comments", { params: { postId } })`
+   - `['products', { category }]` → `qk("products", { search: { category } })`
+
+4. **Use `qk.use()` for invalidation** - get autocomplete for all registered patterns
+
+5. **Remove manual query key factories** - they're no longer needed!
+
+
+## Guide for AI Agents
+
+If you're an AI agent helping users implement TanStack Query with this library, follow these patterns:
+
+### Basic Query Pattern
+
+```typescript
+import { qk } from "@frsty/typesafe-query-keys";
+import { useQuery } from "@tanstack/react-query";
+
+// Simple query without parameters
+useQuery({
+  queryKey: qk("users"),
+  queryFn: fetchUsers,
+});
+
+// Query with path parameters
+useQuery({
+  queryKey: qk("users/$userId", { 
+    params: { userId: "123" } 
+  }),
+  queryFn: () => fetchUser("123"),
+});
+
+// Query with search parameters (query strings)
+useQuery({
+  queryKey: qk("products", { 
+    search: { category: "electronics", sort: "price" }
+  }),
+  queryFn: () => fetchProducts({ category: "electronics", sort: "price" }),
+});
+
+// Query with both path and search parameters
+useQuery({
+  queryKey: qk("users/$userId/posts", {
+    params: { userId: "123" },
+    search: { status: "published", limit: 10 }
+  }),
+  queryFn: () => fetchUserPosts("123", { status: "published", limit: 10 }),
+});
+```
+
+### Mutation Pattern with Invalidation
+
+```typescript
+import { qk } from "@frsty/typesafe-query-keys";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+function UpdateUserForm({ userId }: { userId: string }) {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (data: UserData) => updateUser(userId, data),
+    onSuccess: () => {
+      // Invalidate specific user
+      queryClient.invalidateQueries({
+        queryKey: qk.use("users/$userId", { params: { userId } })
+      });
+      
+      // Invalidate all users list
+      queryClient.invalidateQueries({
+        queryKey: qk.use("users")
+      });
+    },
+  });
+
+  return <form onSubmit={(e) => {
+    e.preventDefault();
+    mutation.mutate({ name: "New Name" });
+  }}>
+    {/* form fields */}
+  </form>;
+}
+```
+
+### Pattern Naming Conventions
+
+When helping users choose query key patterns:
+
+1. **Use hierarchical paths**: `"users/$userId/posts/$postId"` not `"user-post"`
+2. **Use parameter placeholders**: `$userId`, `$postId`, `$id` for dynamic segments
+3. **Keep it RESTful**: Mirror your API structure when possible
+4. **Use descriptive names**: `"users/$userId/settings"` not `"users/$userId/s"`
+
+### Common Patterns
+
+```typescript
+// List queries
+qk("products")
+qk("users")
+
+// Detail queries
+qk("products/$productId", { params: { productId } })
+qk("users/$userId", { params: { userId } })
+
+// Nested resources
+qk("users/$userId/posts", { params: { userId } })
+qk("posts/$postId/comments", { params: { postId } })
+
+// Filtered lists
+qk("products", { search: { category, minPrice, maxPrice } })
+qk("users", { search: { role, status } })
+
+// Paginated queries
+qk("posts", { search: { page, limit } })
+qk("comments", { search: { page: 1, perPage: 20 } })
+
+// Sorted queries
+qk("products", { search: { sortBy: "price", order: "asc" } })
+```
+
+### Invalidation Strategies
+
+```typescript
+const queryClient = useQueryClient();
+
+// Invalidate a specific item
+queryClient.invalidateQueries({
+  queryKey: qk.use("users/$userId", { params: { userId: "123" } })
+});
+
+// Invalidate all items in a collection
+queryClient.invalidateQueries({
+  queryKey: qk.use("users")
+});
+
+// Invalidate all related queries (users and all nested resources)
+queryClient.invalidateQueries({
+  queryKey: qk.use("users") // Also invalidates "users/$userId", "users/$userId/posts", etc.
+});
+
+// Invalidate multiple patterns
+queryClient.invalidateQueries({ queryKey: qk.use("users") });
+queryClient.invalidateQueries({ queryKey: qk.use("posts") });
+```
+
+### Important Notes for AI Agents
+
+1. **Always use `qk()` in `queryKey`**: This registers the pattern for type generation
+2. **Use `qk.use()` for invalidation/prefetching**: Provides autocomplete for registered patterns
+3. **Parent paths are automatic**: `qk("users/$userId/posts")` automatically tracks `"users"` and `"users/$userId"`
+4. **Parameters are type-checked**: The plugin generates types ensuring you provide correct params
+5. **Search params are for filters/options**: Use `search` for query strings, `params` for path segments
+6. **Patterns are registered at build time**: The dev server must be running for type generation
+
+### Type Safety Example
+
+```typescript
+// After using qk("users/$userId") somewhere in your code, you get:
+
+// ✅ Correct - TypeScript happy
+qk.use("users/$userId", { params: { userId: "123" } })
+
+// ❌ Error - Missing required params
+qk.use("users/$userId")
+
+// ❌ Error - Wrong param name
+qk.use("users/$userId", { params: { id: "123" } })
+
+// ❌ Error - Pattern not registered
+qk.use("nonexistent/pattern")
 ```
 
 ## Troubleshooting
