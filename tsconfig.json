@@ -30,9 +30,9 @@
     "isolatedModules": true,
     "preserveSymlinks": false,
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+    },
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "exclude": ["node_modules", "dist", "test/**/*.test.ts"],
 }
