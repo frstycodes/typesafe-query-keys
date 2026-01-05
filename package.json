@@ -6,6 +6,12 @@
   "author": "Sandesh Pandey",
   "main": ".src/__exports/runtime.ts",
   "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "bugs": {
     "url": "https://github.com/frstycodes/typesafe-query-keys/issues"
   },
@@ -67,7 +73,7 @@
     "changeset": "cliff-jumper",
     "version": "cliff-jumper version",
     "release": "cliff-jumper release",
-    "bump": "npm run changeset && npm run version && git push --follow-tags",
+    "bump": "pnpm changeset && pnpm version && git push --follow-tags",
     "prepare": "husky",
     "commit": "cz"
   },
