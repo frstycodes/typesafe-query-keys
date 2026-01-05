@@ -73,7 +73,9 @@
     "changeset": "cliff-jumper",
     "version": "cliff-jumper version",
     "release": "cliff-jumper release",
-    "bump": "pnpm changeset && pnpm version && git push --follow-tags",
+    "bump": "pnpm changeset && pnpm version",
+    "bump:push": "pnpm bump && git push --follow-tags",
+    "push": "git push --follow-tags",
     "commit": "cz"
   },
   "peerDependencies": {
