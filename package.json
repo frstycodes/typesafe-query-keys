@@ -74,12 +74,11 @@
     "version": "cliff-jumper version",
     "release": "cliff-jumper release",
     "bump": "pnpm changeset && pnpm version && git push --follow-tags",
-    "prepare": "husky",
     "commit": "cz"
   },
   "peerDependencies": {
     "typescript": ">=4",
-    "vite": ">=2",
+    "vite": ">=3",
     "webpack": ">=3"
   },
   "peerDependenciesMeta": {
@@ -94,14 +93,10 @@
     "@effect/platform": "0.94.1",
     "@effect/platform-node": "0.104.0",
     "chokidar": "^4.0.3",
-    "commander": "^14.0.0",
-    "cosmiconfig": "^9.0.0",
     "effect": "3.19.14",
     "globby": "15.0.0",
-    "globify-gitignore": "1.0.3",
     "ignore": "7.0.5",
     "micromatch": "4.0.8",
-    "neverthrow": "^8.2.0",
     "zod": "4.1.12"
   },
   "devDependencies": {
@@ -118,7 +113,6 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.32.0",
-    "husky": "9.1.7",
     "prettier": "3.6.2",
     "rimraf": "^6.0.1",
     "tsup": "8.5.0",
