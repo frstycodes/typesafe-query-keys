@@ -50,9 +50,13 @@
       "import": "./dist/plugins/generic.js",
       "require": "./dist/plugins/generic.cjs"
     },
+    "./plugin/next": {
+      "import": "./dist/plugins/next.js",
+      "require": "./dist/plugins/next.cjs"
+    },
     "./config": {
-      "import": "./dist/config/index.js",
-      "require": "./dist/config/index.cjs"
+      "import": "./dist/config.js",
+      "require": "./dist/config.cjs"
     }
   },
   "scripts": {

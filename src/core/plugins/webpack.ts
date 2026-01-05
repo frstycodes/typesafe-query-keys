@@ -19,13 +19,14 @@ function plugin(opts = {} as Config.Input) {
 
   return {
     apply(compiler) {
-      const isWatchMode = compiler.options.watch || compiler.watchMode
+      const isProd = process.env.NODE_ENV === 'development'
 
-      // For production builds or non-watch mode
-      if (!isWatchMode) {
-        compiler.hooks.beforeCompile.tapPromise(PLUGIN_NAME, async () => {
-          await engine.scanAndGenerate()
-        })
+      // For production builds
+      if (!isProd) {
+        compiler.hooks.beforeCompile.tapPromise(
+          PLUGIN_NAME,
+          async () => await engine.scanAndGenerate(),
+        )
         return
       }
 

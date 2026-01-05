@@ -40,7 +40,6 @@ export const extractQueryKeys = ({
 }: ExtractQueryKeysProps) =>
   Effect.gen(function* () {
     const logger = yield* LoggerService
-    logger.debug(`Scanning ${filePath}`)
 
     const queryKeys = new Set<string>()
 

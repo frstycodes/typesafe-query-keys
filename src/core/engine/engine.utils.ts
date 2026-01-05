@@ -48,14 +48,14 @@ export const processFile = (filePath: string) =>
       return false
     }
 
+    logger.debug('Scanning:', filePath)
     const keys = yield* extractQueryKeys({ filePath, content })
 
     if (!cache.haveKeysChanged(filePath, keys)) {
       logger.debug('Using cached data for:', filePath)
       return false
     }
-
-    logger.debug(`Scanned ${filePath}: found ${keys.length} keys`)
+    logger.debug(`Scanned[${keys.length}]:`, filePath)
 
     cache.set(filePath, { keys, hash, mTime })
 
@@ -78,10 +78,13 @@ export const generateTypes = () =>
   Effect.gen(function* () {
     const config = yield* ConfigService
     const cache = yield* CacheService
+    const logger = yield* LoggerService
 
     const allKeys = cache.collectAllKeys()
     const keysWithParents = enrichKeysWithParents(allKeys)
     const sortedKeys = [...keysWithParents].sort((a, b) => a.localeCompare(b))
+
+    logger.debug('Writing query keys to file:', config.outputPath)
 
     yield* writeQueryKeysToFile({
       queryKeys: sortedKeys,
@@ -95,6 +98,7 @@ export const createWatcher = (config: Config) =>
   Effect.try({
     try: () =>
       chokidar.watch(config.include.patterns, {
+        cwd: config.rootDir,
         ignored: config.exclude.patterns,
         atomic: true,
         ignoreInitial: true,

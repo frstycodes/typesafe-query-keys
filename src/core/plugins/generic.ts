@@ -1,6 +1,6 @@
 import { createEngine } from '@/core/engine'
 import { Config } from '@/core/services/config/config-schema'
-import { singleton } from '@/core/utils/singleton'
+import { processSafeSingleton } from '@/core/utils/singleton'
 
 async function plugin(opts: Config.Input) {
   const config = Config.parse(opts)
@@ -58,5 +58,12 @@ async function plugin(opts: Config.Input) {
  *
  * @see {@link https://github.com/frstycodes/typesafe-query-keys#readme Documentation} for more details
  */
-const typesafeQueryKeysPluginGeneric = singleton(plugin)
+function typesafeQueryKeysPluginGeneric(opts: Config.Input = {}) {
+  return processSafeSingleton(
+    'generic-plugin',
+    () => plugin(opts),
+    JSON.stringify(opts),
+  )
+}
+
 export default typesafeQueryKeysPluginGeneric

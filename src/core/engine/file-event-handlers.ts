@@ -3,10 +3,12 @@ import * as Effect from 'effect/Effect'
 
 import {
   CacheService,
+  ConfigService,
   FileCollectorService,
   LoggerService,
 } from '@/core/services'
 import { processFile } from './engine.utils'
+import { Path } from '@effect/platform/Path'
 
 export type FileChangeEvent = {
   _tag: 'Add' | 'Change' | 'Unlink'
@@ -22,27 +24,30 @@ export const handleFileEvent = (event: FileChangeEvent) =>
     const cache = yield* CacheService
     const collector = yield* FileCollectorService
     const logger = yield* LoggerService
+    const config = yield* ConfigService
+
     const fs = yield* FileSystem
+    const path = yield* Path
 
-    const path = event.path
+    const filePath = path.resolve(config.rootDir, event.path)
 
-    const exists = yield* fs.exists(path)
+    const exists = yield* fs.exists(filePath)
 
     if (event._tag === 'Unlink' || !exists) {
-      return yield* handleFileRemoval(path)
+      return yield* handleFileRemoval(filePath)
     }
 
-    const shouldProcess = yield* collector.shouldProcess(path)
+    const shouldProcess = yield* collector.shouldProcess(filePath)
 
     if (!shouldProcess) {
-      const fileExists = cache.get(path)
-      if (fileExists) return yield* handleFileRemoval(path)
+      const fileExists = cache.get(filePath)
+      if (fileExists) return yield* handleFileRemoval(filePath)
       return false
     }
 
-    logger.debug('File changed:', path)
+    logger.debug('File changed:', filePath)
 
-    const shouldGenerate = yield* processFile(path)
+    const shouldGenerate = yield* processFile(filePath)
     return shouldGenerate
   }).pipe(
     Effect.catchTag('SystemError', 'BadArgument', (error) =>
