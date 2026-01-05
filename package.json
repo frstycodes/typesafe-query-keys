@@ -4,7 +4,7 @@
   "description": "Type-safe query keys for TanStack Query",
   "type": "module",
   "author": "Sandesh Pandey",
-  "main": ".src/__exports/runtime.ts",
+  "main": "dist/runtime.js",
   "license": "MIT",
   "files": [
     "dist",
@@ -31,28 +31,24 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/runtime/index.js",
-      "require": "./dist/runtime/index.cjs"
+      "import": "./dist/runtime.js",
+      "require": "./dist/runtime.cjs"
     },
     "./plugin": {
-      "import": "./dist/plugin/index.js",
-      "require": "./dist/plugin/index.cjs"
+      "import": "./dist/plugins/index.js",
+      "require": "./dist/plugins/index.cjs"
     },
     "./plugin/vite": {
-      "import": "./dist/plugin/vite/index.js",
-      "require": "./dist/plugin/vite/index.cjs"
+      "import": "./dist/plugins/vite.js",
+      "require": "./dist/plugins/vite.cjs"
     },
     "./plugin/webpack": {
-      "import": "./dist/plugin/webpack/index.js",
-      "require": "./dist/plugin/webpack/index.cjs"
+      "import": "./dist/plugins/webpack.js",
+      "require": "./dist/plugins/webpack.cjs"
     },
     "./plugin/generic": {
-      "import": "./dist/plugin/generic/index.js",
-      "require": "./dist/plugin/generic/index.cjs"
-    },
-    "./plugin/generic/exec": {
-      "import": "./dist/plugin/generic/exec.js",
-      "require": "./dist/plugin/generic/exec.cjs"
+      "import": "./dist/plugins/generic.js",
+      "require": "./dist/plugins/generic.cjs"
     },
     "./config": {
       "import": "./dist/config/index.js",
