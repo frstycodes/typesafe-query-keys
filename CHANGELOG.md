@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+# [2.0.0-beta.2](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.1...v2.0.1-beta.0) - (2026-01-05)
+
+## 🐛 Bug Fixes
+
+- **package:** Fix export paths in package.json ([93d0dab](https://github.com/frstycodes/typesafe-query-keys/commit/93d0dab5b0acd73d8c7922a6834d21bef4b44bbd))
+
 # [2.0.0-beta.1](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.0...v2.0.0-beta.1) - (2026-01-05)
 
 # [2.0.0-beta.0](https://github.com/frstycodes/typesafe-query-keys/compare/v1.2.0-beta.0...v2.0.0-beta.0) - (2026-01-04)
