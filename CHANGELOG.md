@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+# [2.0.0-beta.5](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.3...v2.0.0-beta.5) - (2026-01-05)
+
+## 🏠 Refactor
+
+- **effect:** Import only used modules for better tree-shaking ([e37f59b](https://github.com/frstycodes/typesafe-query-keys/commit/e37f59bdc3b61d6fa920a2a1779b0314eec0ac2c))
+
 # [2.0.0-beta.4](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.3...v2.0.0-beta.4) - (2026-01-05)
 
 # [2.0.2-beta.3](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.2...v2.0.0-beta.3) - (2026-01-05)
