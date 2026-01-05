@@ -1,4 +1,4 @@
-import { Data } from 'effect/index'
+import { Data } from 'effect'
 
 export class GlobbyError extends Data.TaggedError('GlobbyError')<{
   message: string
