@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
+# [2.0.0-beta.4](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.3...v2.0.0-beta.4) - (2026-01-05)
+
 # [2.0.2-beta.3](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.2...v2.0.0-beta.3) - (2026-01-05)
 
 ## 🐛 Bug Fixes
