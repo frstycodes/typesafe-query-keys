@@ -1,4 +1,4 @@
-import Effect from 'effect/Effect'
+import * as Effect from 'effect/Effect'
 import { FileSystem } from '@effect/platform/FileSystem'
 import { Path } from '@effect/platform/Path'
 import { LoggerService } from '../services'
