@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+# [2.1.0-beta.0](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.5...v2.1.0-beta.0) - (2026-01-05)
+
+## 🐛 Bug Fixes
+
+- **writer:** Use namespace import for Effect ([2027d2f](https://github.com/frstycodes/typesafe-query-keys/commit/2027d2ff43cbf40eed4aecedd4ca953d84b31598))
+
+## 🚀 Features
+
+- **plugin:** Add next.js plugin and process-safe singleton ([0864d65](https://github.com/frstycodes/typesafe-query-keys/commit/0864d65e98ccd2ccf7b27c38bc78464756e2c4da))
+
 # [2.0.0-beta.5](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.3...v2.0.0-beta.5) - (2026-01-05)
 
 ## 🏠 Refactor
