@@ -1,8 +1,14 @@
-import { FileSystem, Path } from '@effect/platform'
-import { Context, Effect, Layer } from 'effect'
+import * as Context from 'effect/Context'
+import * as Effect from 'effect/Effect'
+import * as Layer from 'effect/Layer'
+
+import { FileSystem } from '@effect/platform/FileSystem'
+import { Path } from '@effect/platform/Path'
+
 import { globbySync } from 'globby'
-import { ConfigService } from '../config'
+
 import { GlobbyError } from '@/core/errors'
+import { ConfigService } from '@/core/services/config'
 
 const FileCollector = {
   collectFiles() {
@@ -25,7 +31,7 @@ const FileCollector = {
   shouldProcess(file: string) {
     return Effect.gen(function* () {
       const config = yield* ConfigService
-      const fs = yield* FileSystem.FileSystem
+      const fs = yield* FileSystem
 
       const relative = yield* ensureRelativePath(config.rootDir, file)
 
@@ -43,7 +49,7 @@ const FileCollector = {
 
 const ensureRelativePath = (rootDir: string, file: string) =>
   Effect.gen(function* () {
-    const path = yield* Path.Path
+    const path = yield* Path
     if (path.isAbsolute(file)) return path.relative(rootDir, file)
     return file
   })

@@ -1,6 +1,6 @@
 import crypto from 'node:crypto'
 import { LoggerService } from '../services'
-import { Effect } from 'effect'
+import * as Effect from 'effect/Effect'
 
 export function hashString(str: string) {
   return Effect.gen(function* () {

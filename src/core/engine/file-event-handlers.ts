@@ -1,5 +1,5 @@
-import { FileSystem } from '@effect/platform'
-import { Effect } from 'effect'
+import { FileSystem } from '@effect/platform/FileSystem'
+import * as Effect from 'effect/Effect'
 
 import {
   CacheService,
@@ -22,7 +22,7 @@ export const handleFileEvent = (event: FileChangeEvent) =>
     const cache = yield* CacheService
     const collector = yield* FileCollectorService
     const logger = yield* LoggerService
-    const fs = yield* FileSystem.FileSystem
+    const fs = yield* FileSystem
 
     const path = event.path
 

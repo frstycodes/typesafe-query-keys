@@ -1,5 +1,6 @@
-import { FileSystem, Path } from '@effect/platform'
-import { Effect } from 'effect'
+import Effect from 'effect/Effect'
+import { FileSystem } from '@effect/platform/FileSystem'
+import { Path } from '@effect/platform/Path'
 import { LoggerService } from '../services'
 import { queryKeysTemplate } from './template'
 
@@ -13,7 +14,7 @@ export function writeQueryKeysToFile({
   outputPath,
 }: WriteQueryKeysToFileProps) {
   return Effect.gen(function* () {
-    const path = yield* Path.Path
+    const path = yield* Path
     const logger = yield* LoggerService
 
     const fileContent = queryKeysTemplate(queryKeys)
@@ -36,7 +37,7 @@ export function writeQueryKeysToFile({
 
 export function ensureDir(dir: string) {
   return Effect.gen(function* () {
-    const fs = yield* FileSystem.FileSystem
+    const fs = yield* FileSystem
 
     const dirExists = yield* fs.exists(dir)
     if (!dirExists) {
@@ -47,7 +48,7 @@ export function ensureDir(dir: string) {
 
 export function writeFileAtomic(filePath: string, content: string) {
   return Effect.gen(function* () {
-    const fs = yield* FileSystem.FileSystem
+    const fs = yield* FileSystem
     const tmp = filePath + '.tmp'
 
     yield* Effect.acquireUseRelease(

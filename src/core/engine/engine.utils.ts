@@ -1,6 +1,7 @@
-import { FileSystem } from '@effect/platform'
+import * as Effect from 'effect/Effect'
+import { FileSystem } from '@effect/platform/FileSystem'
+
 import chokidar from 'chokidar'
-import { Effect } from 'effect'
 
 import { WatcherError } from '@/core/errors'
 import {
@@ -22,7 +23,7 @@ export const processFile = (filePath: string) =>
   Effect.gen(function* () {
     const cache = yield* CacheService
     const logger = yield* LoggerService
-    const fs = yield* FileSystem.FileSystem
+    const fs = yield* FileSystem
 
     const mTime = yield* getMtime(filePath)
 

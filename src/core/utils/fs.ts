@@ -1,10 +1,12 @@
-import { Effect, Option } from 'effect'
-import { FileSystem } from '@effect/platform'
+import * as Effect from 'effect/Effect'
+import * as Option from 'effect/Option'
+import { FileSystem } from '@effect/platform/FileSystem'
+
 import { LoggerService } from '../services'
 
 export const getMtime = (filePath: string) =>
   Effect.gen(function* () {
-    const fs = yield* FileSystem.FileSystem
+    const fs = yield* FileSystem
     const logger = yield* LoggerService
 
     const mTime = yield* fs.stat(filePath).pipe(

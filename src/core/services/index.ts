@@ -1,10 +1,13 @@
-import { Layer } from 'effect'
+import * as Layer from 'effect/Layer'
+
+import * as NodeFileSystem from '@effect/platform-node/NodeFileSystem'
+import * as NodePath from '@effect/platform-node/NodePath'
 
 import { CacheServiceLive } from './cache'
 import { FileCollectorLive } from './file-collector'
 import { LoggerServiceLive } from './logger'
-import { NodeFileSystem, NodePath } from '@effect/platform-node'
 
+// exports
 export { CacheService, CacheServiceLive } from './cache'
 export { ConfigService } from './config'
 export { FileCollectorLive, FileCollectorService } from './file-collector'

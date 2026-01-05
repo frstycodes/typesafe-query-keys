@@ -1,5 +1,8 @@
-import { Effect, Layer, ManagedRuntime, Stream } from 'effect'
+import * as Effect from 'effect/Effect'
+import * as Layer from 'effect/Layer'
+import * as Stream from 'effect/Stream'
 import * as Duration from 'effect/Duration'
+import * as ManagedRuntime from 'effect/ManagedRuntime'
 
 import { Logs } from '@/core/config'
 import { ConfigService, LiveLayer, LoggerService } from '@/core/services'
