@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-# [2.0.0-beta.2](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.1...v2.0.1-beta.0) - (2026-01-05)
+# [2.0.2-beta.3](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.2...v2.0.0-beta.3) - (2026-01-05)
+
+## 🐛 Bug Fixes
+
+- **services:** Only import used services ([8ad943e](https://github.com/frstycodes/typesafe-query-keys/commit/8ad943e4984abaafbd5fdde0d94d3d14e1003d39))
+
+# [2.0.0-beta.2](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.1...v2.0.0-beta.2) - (2026-01-05)
 
 ## 🐛 Bug Fixes
 
