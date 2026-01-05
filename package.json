@@ -72,7 +72,8 @@
     "bump": "pnpm changeset && pnpm version",
     "bump:push": "pnpm bump && git push --follow-tags",
     "push": "git push --follow-tags",
-    "commit": "cz"
+    "commit": "cz",
+    "clean:nodes": "rimraf node_modules"
   },
   "peerDependencies": {
     "typescript": ">=4",
@@ -88,6 +89,7 @@
     }
   },
   "dependencies": {
+    "@effect/cluster": "0.56.1",
     "@effect/platform": "0.94.1",
     "@effect/platform-node": "0.104.0",
     "chokidar": "^4.0.3",
