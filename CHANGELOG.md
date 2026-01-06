@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
+# [2.0.0-beta.6](https://github.com/frstycodes/typesafe-query-keys/compare/v2.1.0-beta.0...v3.0.0-beta.0) - (2026-01-06)
+
+## 🏠 Refactor
+
+- **runtime:** Update path separator from "/" to "." ([8c1fa8c](https://github.com/frstycodes/typesafe-query-keys/commit/8c1fa8c54197d83af98a575f124a9e3eec9fed2a))
+  - 💥 **BREAKING CHANGE:**  Path Separator Changed from "/" to "."
+    
+    The path separator for query keys has been changed from `/` to `.` for better typescript autocompletion. 
+    
+    **Before:**
+    ```typescript
+    qk('users/profile')
+    qk.use('users/$userId/posts')
+    ```
+    
+    **After:**
+    ```typescript
+    qk('users.profile')
+    qk.use('users.$userId.posts')
+    ```
+    
+  
+    ### Migration
+  
+      **Automated migration with codemod (recommended):**
+      
+      ```bash
+      npx @frsty/typesafe-query-keys codemod slash-to-dot src/
+      ```
+        
+      **What the codemod does:**
+      - ✅ Transforms all `qk()` and `qk.use()` calls to use dot notation
+    
+      **Before running the codemod:**
+      1. Commit your current changes
+      2. Preview changes with `--dry --print` flag
+      3. Run the codemod
+      4. Review changes with `git diff`
+      5. Run your test suite
+      6. Commit the migration
+
 # [2.1.0-beta.0](https://github.com/frstycodes/typesafe-query-keys/compare/v2.0.0-beta.5...v2.1.0-beta.0) - (2026-01-05)
 
 ## 🐛 Bug Fixes

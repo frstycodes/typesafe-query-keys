@@ -138,7 +138,7 @@ import { useQuery } from "@tanstack/react-query"
 // Define a query key pattern
 const testQuery = useQuery({
   // This automatically gets registered and generates types for parent paths as well: "users/$userId/posts", "users/$userId", "users"
-  queryKey: qk("users/$userId/posts", {
+  queryKey: qk("users.$userId.posts", {
     params: { userId: "123" }
   }),
   queryFn: async () => {
@@ -148,7 +148,7 @@ const testQuery = useQuery({
 })
 
 // Use the registered pattern with `qk.use()` (with autocomplete)
-const userPostsQK = qk.use("users/$userId/posts", {
+const userPostsQK = qk.use("users.$userId.posts", {
   params: { userId: "123" },
 });
 
@@ -209,7 +209,7 @@ function UserProfile({ userId }: { userId: string }) {
   
   const { data } = useQuery({
     // Pattern automatically registered - types generated at build time
-    queryKey: qk("users/$userId", { params: { userId } }),
+    queryKey: qk("users.$userId", { params: { userId } }),
     queryFn: () => fetchUser(userId),
   });
 
@@ -218,7 +218,7 @@ function UserProfile({ userId }: { userId: string }) {
     onSuccess: () => {
       // Invalidate with autocomplete - no manual factory needed!
       queryClient.invalidateQueries({ 
-        queryKey: qk.use("users/$userId", { params: { userId } })
+        queryKey: qk.use("users.$userId", { params: { userId } })
       });
       
       // Or invalidate all user queries
@@ -240,8 +240,8 @@ function UserProfile({ userId }: { userId: string }) {
 2. **Configure your build tool** (Vite, Webpack, or Generic plugin - see [Usage](#usage))
 
 3. **Replace query key factories** with `qk()` patterns:
-   - `['users', userId]` → `qk("users/$userId", { params: { userId } })`
-   - `['posts', postId, 'comments']` → `qk("posts/$postId/comments", { params: { postId } })`
+   - `['users', userId]` → `qk("users.$userId", { params: { userId } })`
+   - `['posts', postId, 'comments']` → `qk("posts.$postId.comments", { params: { postId } })`
    - `['products', { category }]` → `qk("products", { search: { category } })`
 
 4. **Use `qk.use()` for invalidation** - get autocomplete for all registered patterns
@@ -267,7 +267,7 @@ useQuery({
 
 // Query with path parameters
 useQuery({
-  queryKey: qk("users/$userId", { 
+  queryKey: qk("users.$userId", { 
     params: { userId: "123" } 
   }),
   queryFn: () => fetchUser("123"),
@@ -283,7 +283,7 @@ useQuery({
 
 // Query with both path and search parameters
 useQuery({
-  queryKey: qk("users/$userId/posts", {
+  queryKey: qk("users.$userId.posts", {
     params: { userId: "123" },
     search: { status: "published", limit: 10 }
   }),
@@ -305,7 +305,7 @@ function UpdateUserForm({ userId }: { userId: string }) {
     onSuccess: () => {
       // Invalidate specific user
       queryClient.invalidateQueries({
-        queryKey: qk.use("users/$userId", { params: { userId } })
+        queryKey: qk.use("users.$userId", { params: { userId } })
       });
       
       // Invalidate all users list
@@ -328,10 +328,10 @@ function UpdateUserForm({ userId }: { userId: string }) {
 
 When helping users choose query key patterns:
 
-1. **Use hierarchical paths**: `"users/$userId/posts/$postId"` not `"user-post"`
+1. **Use hierarchical paths**: `"users.$userId.posts.$postId"` not `"user-post"`
 2. **Use parameter placeholders**: `$userId`, `$postId`, `$id` for dynamic segments
 3. **Keep it RESTful**: Mirror your API structure when possible
-4. **Use descriptive names**: `"users/$userId/settings"` not `"users/$userId/s"`
+4. **Use descriptive names**: `"users.$userId.settings"` not `"users.$userId.s"`
 
 ### Common Patterns
 
@@ -341,12 +341,12 @@ qk("products")
 qk("users")
 
 // Detail queries
-qk("products/$productId", { params: { productId } })
-qk("users/$userId", { params: { userId } })
+qk("products.$productId", { params: { productId } })
+qk("users.$userId", { params: { userId } })
 
 // Nested resources
-qk("users/$userId/posts", { params: { userId } })
-qk("posts/$postId/comments", { params: { postId } })
+qk("users.$userId.posts", { params: { userId } })
+qk("posts.$postId.comments", { params: { postId } })
 
 // Filtered lists
 qk("products", { search: { category, minPrice, maxPrice } })
@@ -367,7 +367,7 @@ const queryClient = useQueryClient();
 
 // Invalidate a specific item
 queryClient.invalidateQueries({
-  queryKey: qk.use("users/$userId", { params: { userId: "123" } })
+  queryKey: qk.use("users.$userId", { params: { userId: "123" } })
 });
 
 // Invalidate all items in a collection
@@ -389,7 +389,7 @@ queryClient.invalidateQueries({ queryKey: qk.use("posts") });
 
 1. **Always use `qk()` in `queryKey`**: This registers the pattern for type generation
 2. **Use `qk.use()` for invalidation/prefetching**: Provides autocomplete for registered patterns
-3. **Parent paths are automatic**: `qk("users/$userId/posts")` automatically tracks `"users"` and `"users/$userId"`
+3. **Parent paths are automatic**: `qk("users.$userId.posts")` automatically tracks `"users"` and `"users.$userId"`
 4. **Parameters are type-checked**: The plugin generates types ensuring you provide correct params
 5. **Search params are for filters/options**: Use `search` for query strings, `params` for path segments
 6. **Patterns are registered at build time**: The dev server must be running for type generation
@@ -400,16 +400,16 @@ queryClient.invalidateQueries({ queryKey: qk.use("posts") });
 // After using qk("users/$userId") somewhere in your code, you get:
 
 // ✅ Correct - TypeScript happy
-qk.use("users/$userId", { params: { userId: "123" } })
+qk.use("users.$userId", { params: { userId: "123" } })
 
 // ❌ Error - Missing required params
-qk.use("users/$userId")
+qk.use("users.$userId")
 
 // ❌ Error - Wrong param name
-qk.use("users/$userId", { params: { id: "123" } })
+qk.use("users.$userId", { params: { id: "123" } })
 
 // ❌ Error - Pattern not registered
-qk.use("nonexistent/pattern")
+qk.use("nonexistent.pattern")
 ```
 
 ## Troubleshooting
