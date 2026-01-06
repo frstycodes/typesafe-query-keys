@@ -2,15 +2,16 @@ import { Effect } from 'effect'
 import ts from 'typescript'
 import { Logs, FUNCTION_NAME } from '@/core/config'
 import { LoggerService } from '@/core/services'
+import { PATH_SEPARATOR } from '@/config'
 
 function extractParentKeys(path: string) {
-  const segments = path.split('/')
+  const segments = path.split(PATH_SEPARATOR)
   const result = []
   let currentPath = ''
 
   for (const idx in segments) {
     const i = Number(idx)
-    if (i > 0) currentPath += '/'
+    if (i > 0) currentPath += PATH_SEPARATOR
     currentPath += segments[i]
     if (i < segments.length - 1) {
       result.push(currentPath)

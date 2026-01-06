@@ -22,7 +22,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should extract multiple parameters', () => {
-      type PostParams = ExtractParamsFromKey<'users/$userId/posts/$postId'>
+      type PostParams = ExtractParamsFromKey<'users.$userId.posts.$postId'>
       const params: PostParams = { userId: 'user1', postId: 'post1' }
 
       expect(Object.keys(params).sort()).toEqual(['postId', 'userId'])
@@ -38,21 +38,21 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should extract parameters from paths with leading slashes', () => {
-      type Params = ExtractParamsFromKey<'/users/$userId'>
+      type Params = ExtractParamsFromKey<'.users.$userId'>
       const params: Params = { userId: '123' }
 
       expect(params.userId).toBe('123')
     })
 
     it('should extract parameters from paths with trailing slashes', () => {
-      type Params = ExtractParamsFromKey<'users/$userId/'>
+      type Params = ExtractParamsFromKey<'users.$userId.'>
       const params: Params = { userId: '123' }
 
       expect(params.userId).toBe('123')
     })
 
     it('should extract consecutive parameters', () => {
-      type Params = ExtractParamsFromKey<'$orgId/$userId'>
+      type Params = ExtractParamsFromKey<'$orgId.$userId'>
       const params: Params = { orgId: 'org1', userId: 'user1' }
 
       expect(params.orgId).toBe('org1')
@@ -60,7 +60,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should extract three or more parameters', () => {
-      type Params = ExtractParamsFromKey<'org/$orgId/team/$teamId/user/$userId'>
+      type Params = ExtractParamsFromKey<'org.$orgId.team.$teamId.user.$userId'>
       const params: Params = {
         orgId: '1',
         teamId: '2',
@@ -74,7 +74,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should handle complex nested paths', () => {
-      type Params = ExtractParamsFromKey<'a/$b/c/$d/e/$f/g'>
+      type Params = ExtractParamsFromKey<'a.$b.c.$d.e.$f.g'>
       const params: Params = { b: '1', d: '2', f: '3' }
 
       expect(params.b).toBe('1')
@@ -83,21 +83,21 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should accept string values', () => {
-      type Params = ExtractParamsFromKey<'users/$id'>
+      type Params = ExtractParamsFromKey<'users.$id'>
       const params: Params = { id: 'abc-123' }
 
       expect(params.id).toBe('abc-123')
     })
 
     it('should accept number values', () => {
-      type Params = ExtractParamsFromKey<'users/$id'>
+      type Params = ExtractParamsFromKey<'users.$id'>
       const params: Params = { id: 42 }
 
       expect(params.id).toBe(42)
     })
 
     it('should accept boolean values', () => {
-      type Params = ExtractParamsFromKey<'settings/$enabled'>
+      type Params = ExtractParamsFromKey<'settings.$enabled'>
       const params: Params = { enabled: true }
 
       expect(params.enabled).toBe(true)
@@ -111,14 +111,14 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should handle parameter at end of path', () => {
-      type Params = ExtractParamsFromKey<'users/posts/$postId'>
+      type Params = ExtractParamsFromKey<'users.posts.$postId'>
       const params: Params = { postId: '999' }
 
       expect(params.postId).toBe('999')
     })
 
     it('should handle parameter at start of path', () => {
-      type Params = ExtractParamsFromKey<'$userId/posts'>
+      type Params = ExtractParamsFromKey<'$userId.posts'>
       const params: Params = { userId: 'abc' }
 
       expect(params.userId).toBe('abc')
@@ -127,7 +127,7 @@ describe('Query Keys - Type Utilities', () => {
 
   describe('HasParams', () => {
     it('should return true for paths with parameters', () => {
-      type HasUserIdParam = HasParams<'users/$userId'>
+      type HasUserIdParam = HasParams<'users.$userId'>
       // This assertion would fail if HasParams returned false
       const result: HasUserIdParam = true
       expect(result).toBe(true)
@@ -141,7 +141,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should return true for multiple parameters', () => {
-      type Result = HasParams<'users/$userId/posts/$postId'>
+      type Result = HasParams<'users.$userId.posts.$postId'>
       const hasParams: Result = true
       expect(hasParams).toBe(true)
     })
@@ -159,13 +159,13 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should return false for paths with $ not at segment start', () => {
-      type Result = HasParams<'users/id$'>
+      type Result = HasParams<'users.id$'>
       const hasParams: Result = false
       expect(hasParams).toBe(false)
     })
 
     it('should return true for consecutive parameters', () => {
-      type Result = HasParams<'$a/$b'>
+      type Result = HasParams<'$a.$b'>
       const hasParams: Result = true
       expect(hasParams).toBe(true)
     })
@@ -173,7 +173,7 @@ describe('Query Keys - Type Utilities', () => {
     it('should return false for simple paths', () => {
       type Result1 = HasParams<'users'>
       type Result2 = HasParams<'posts'>
-      type Result3 = HasParams<'settings/profile'>
+      type Result3 = HasParams<'settings.profile'>
 
       const r1: Result1 = false
       const r2: Result2 = false
@@ -229,7 +229,7 @@ describe('Query Keys - Type Utilities', () => {
 
   describe('Options type behavior', () => {
     it('should require params for paths with parameters', () => {
-      type Opts = Options<'users/$userId'>
+      type Opts = Options<'users.$userId'>
 
       // This should require params
       const opts: Opts = {
@@ -249,7 +249,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should always allow search parameter', () => {
-      type OptsWithParams = Options<'users/$userId'>
+      type OptsWithParams = Options<'users.$userId'>
       type OptsWithoutParams = Options<'users'>
 
       const opts1: OptsWithParams = {
@@ -266,7 +266,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should handle complex parameter paths', () => {
-      type Opts = Options<'org/$orgId/team/$teamId/user/$userId'>
+      type Opts = Options<'org.$orgId.team.$teamId.user.$userId'>
 
       const opts: Opts = {
         params: { orgId: '1', teamId: '2', userId: '3' },
@@ -280,7 +280,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should support params and search together', () => {
-      type Opts = Options<'users/$userId/posts'>
+      type Opts = Options<'users.$userId.posts'>
 
       const opts: Opts = {
         params: { userId: '123' },
@@ -301,42 +301,42 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should handle paths with only slashes', () => {
-      type Params = ExtractParamsFromKey<'//'>
+      type Params = ExtractParamsFromKey<'..'>
       const params: Params = {}
 
       expect(Object.keys(params).length).toBe(0)
     })
 
     it('should preserve parameter names exactly', () => {
-      type Params = ExtractParamsFromKey<'users/$userId_123'>
+      type Params = ExtractParamsFromKey<'users.$userId_123'>
       const params: Params = { userId_123: 'test' }
 
       expect(params.userId_123).toBe('test')
     })
 
     it('should handle camelCase parameter names', () => {
-      type Params = ExtractParamsFromKey<'users/$currentUserId'>
+      type Params = ExtractParamsFromKey<'users.$currentUserId'>
       const params: Params = { currentUserId: '123' }
 
       expect(params.currentUserId).toBe('123')
     })
 
     it('should handle snake_case parameter names', () => {
-      type Params = ExtractParamsFromKey<'users/$user_id'>
+      type Params = ExtractParamsFromKey<'users.$user_id'>
       const params: Params = { user_id: '123' }
 
       expect(params.user_id).toBe('123')
     })
 
     it('should handle PascalCase parameter names', () => {
-      type Params = ExtractParamsFromKey<'users/$UserId'>
+      type Params = ExtractParamsFromKey<'users.$UserId'>
       const params: Params = { UserId: '123' }
 
       expect(params.UserId).toBe('123')
     })
 
     it('should handle numeric suffix parameter names', () => {
-      type Params = ExtractParamsFromKey<'users/$id1/posts/$id2'>
+      type Params = ExtractParamsFromKey<'users.$id1.posts.$id2'>
       const params: Params = { id1: '1', id2: '2' }
 
       expect(params.id1).toBe('1')
@@ -346,7 +346,7 @@ describe('Query Keys - Type Utilities', () => {
 
   describe('Options.ParamsOnly', () => {
     it('should extract params for paths with parameters', () => {
-      type ParamsOnly = Options.ParamsOnly<'users/$userId'>
+      type ParamsOnly = Options.ParamsOnly<'users.$userId'>
 
       const paramsOnly: ParamsOnly = {
         params: { userId: '123' },
@@ -364,7 +364,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should not include search in ParamsOnly', () => {
-      type ParamsOnly = Options.ParamsOnly<'users/$userId'>
+      type ParamsOnly = Options.ParamsOnly<'users.$userId'>
 
       // The following would cause a TypeScript error:
       // const invalid: ParamsOnly = {
@@ -414,7 +414,7 @@ describe('Query Keys - Type Utilities', () => {
 
   describe('Real-world type scenarios', () => {
     it('should handle user detail endpoint types', () => {
-      type UserDetailKey = 'users/$userId'
+      type UserDetailKey = 'users.$userId'
       type UserParams = ExtractParamsFromKey<UserDetailKey>
       type UserOptions = Options<UserDetailKey>
 
@@ -430,7 +430,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should handle nested resource types', () => {
-      type NestedKey = 'orgs/$orgId/teams/$teamId/members'
+      type NestedKey = 'orgs.$orgId.teams.$teamId.members'
       type NestedParams = ExtractParamsFromKey<NestedKey>
 
       const params: NestedParams = {
@@ -473,7 +473,7 @@ describe('Query Keys - Type Utilities', () => {
     })
 
     it('should handle mutation endpoint types', () => {
-      type MutationKey = 'users/$userId/update'
+      type MutationKey = 'users.$userId.update'
       type MutationParams = ExtractParamsFromKey<MutationKey>
 
       const params: MutationParams = { userId: '456' }

@@ -1,3 +1,4 @@
+import { PATH_SEPARATOR } from '@/config'
 import { Options } from '../types'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -6,7 +7,7 @@ export function pathToQueryKey(path: string, options: Options.Permissive) {
 
   const { params = {}, search } = options
 
-  const segments = path.split('/')
+  const segments = path.split(PATH_SEPARATOR)
   const result: any[] = []
   const addToResult = (value: string) => result.push(value.trim())
 

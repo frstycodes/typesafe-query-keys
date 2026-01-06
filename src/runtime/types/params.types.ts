@@ -1,3 +1,4 @@
+import { PATH_SEPARATOR } from '@/config'
 import { TObject } from '../../types/common'
 
 /** Valid parameter value types for query key parameters */
@@ -9,7 +10,7 @@ export type ParamValue = string | number | boolean
  * @internal
  */
 type INTERNAL__ExtractParamsFromKey<T extends string> =
-  T extends `${string}$${infer Param}/${infer Rest}`
+  T extends `${string}$${infer Param}${PATH_SEPARATOR}${infer Rest}`
     ? { [K in Param]: ParamValue } & INTERNAL__ExtractParamsFromKey<Rest>
     : T extends `${string}$${infer Param}`
       ? { [K in Param]: ParamValue }
