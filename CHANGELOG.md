@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# [2.0.0-beta.6](https://github.com/frstycodes/typesafe-query-keys/compare/v2.1.0-beta.0...v3.0.0-beta.0) - (2026-01-06)
+# [2.0.0-beta.7](https://github.com/frstycodes/typesafe-query-keys/compare/v2.1.0-beta.0...v2.0.0-beta.7) - (2026-01-06)
 
 ## 🏠 Refactor
 
