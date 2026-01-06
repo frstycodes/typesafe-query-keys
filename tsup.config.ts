@@ -11,7 +11,7 @@ export default defineConfig([
   // CLI
   {
     entry: ['src/cli', 'src/codemods'],
-    format: ['esm'],
+    format: ['cjs'],
     dts: false,
     treeshake: true,
     outDir: 'dist',
