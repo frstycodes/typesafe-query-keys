@@ -1,13 +1,13 @@
 {
   "name": "@frsty/typesafe-query-keys",
-  "version": "2.0.0-beta.9",
+  "version": "2.0.0-beta.10",
   "description": "Type-safe query keys for TanStack Query",
   "type": "module",
   "author": "Sandesh Pandey",
   "main": "dist/runtime.js",
   "license": "MIT",
   "bin": {
-    "typesafe-query-keys": "./dist/cli/index.js"
+    "typesafe-query-keys": "./dist/cli/index.cjs"
   },
   "files": [
     "dist",
